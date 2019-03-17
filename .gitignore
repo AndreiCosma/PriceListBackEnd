@@ -28,7 +28,7 @@ HELP.md
 ### VS Code ###
 .vscode/
 
-.mvn
+.mvn/
 
 build/
 .idea/
