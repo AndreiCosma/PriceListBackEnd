@@ -3,15 +3,17 @@ package com.csm.domain.entity
 import org.springframework.security.core.userdetails.UserDetails
 import javax.persistence.Entity
 import javax.persistence.OneToMany
+import javax.persistence.Table
 
-@Entity
-class User(private val enabled: Boolean,
-           private val email: String,
-           private val username: String,
-           private val password: String,
-           private val credentialsNonExpired: Boolean,
-           private val accountNonExpired: Boolean,
-           private val accountNonLocked: Boolean,
+@Entity(name = "UserEntity")
+@Table(name = "USER_TABLE")
+class User( val enabled: Boolean,
+            val email: String,
+            val usernameU: String,
+            val passwordP: String,
+            val credentialsNonExpired: Boolean,
+            val accountNonExpired: Boolean,
+            val accountNonLocked: Boolean,
            @OneToMany private val authorities: List<Authority>
 ) : BaseEntity(), UserDetails {
 
@@ -19,11 +21,11 @@ class User(private val enabled: Boolean,
 
     override fun isEnabled() = enabled
 
-    override fun getUsername() = username
+    override fun getUsername() = usernameU
 
     override fun isCredentialsNonExpired() = credentialsNonExpired
 
-    override fun getPassword() = password
+    override fun getPassword() = passwordP
 
     override fun isAccountNonExpired() = accountNonExpired
 

@@ -1,1 +1,27 @@
-
+spring:
+  jwt:
+    pwd-encoder:
+      secret: "Secret!@#"
+      iterations: 33
+      key-length: 256
+    secret: "ThisIsSecretForJWTHS512SignatureAlgorithmThatMUSTHave512bitsKeySize"
+    expiration: 28800
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/price-list"
+    username: "postgres"
+    password: "postgres"
+  jpa:
+    hibernate.ddl-auto: create
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username:
+    password:
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    protocol: smtp
+    test-connection: false

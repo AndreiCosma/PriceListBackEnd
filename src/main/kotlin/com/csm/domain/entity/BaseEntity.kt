@@ -5,8 +5,8 @@ import javax.persistence.Id
 import javax.persistence.MappedSuperclass
 
 @MappedSuperclass
-open class BaseEntity{
+open class BaseEntity {
     @Id
     @GeneratedValue
-    private val id = 1L
+    val id = 1L
 }
