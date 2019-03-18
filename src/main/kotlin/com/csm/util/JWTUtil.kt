@@ -1,7 +1,6 @@
-package com.csm.uitl
+package com.csm.util
 
 import com.csm.domain.entity.User
-import org.springframework.stereotype.Component
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.SignatureAlgorithm

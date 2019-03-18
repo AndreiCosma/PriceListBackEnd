@@ -26,6 +26,7 @@ class UserRegistrationServiceImpl(val userRepo: UserRepo,
     override fun registerNewUser(userRegistrationDTO: UserRegistrationDTO) {
         //Check user registration correctness
         userRegistrationDTO.isUserOk()
+        //ToDO: Check if user exists.
 
         //Save user
         val user = userRepo.save(userRegistrationDTO.toUser())
@@ -39,6 +40,8 @@ class UserRegistrationServiceImpl(val userRepo: UserRepo,
             javaMailSender.send(simpleMailMessage)
         } catch (e: MailException) {
             //Delete user if email fails.
+            //ToDO: Investigate delete conflict if mail fails
+            logger.error("Email error ---> ${e.toString()}")
             userRepo.delete(user)
             throw UserRegistrationException("Failed to send authorization code to email: ${userRegistrationDTO.email}.")
         }

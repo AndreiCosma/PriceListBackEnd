@@ -1,20 +1,21 @@
 package com.csm.domain.entity
 
 import org.springframework.security.core.userdetails.UserDetails
+import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.OneToMany
 import javax.persistence.Table
 
 @Entity(name = "UserEntity")
 @Table(name = "USER_TABLE")
-class User( val enabled: Boolean,
-            val email: String,
-            val usernameU: String,
-            val passwordP: String,
-            val credentialsNonExpired: Boolean,
-            val accountNonExpired: Boolean,
-            val accountNonLocked: Boolean,
-           @OneToMany private val authorities: List<Authority>
+class User(val enabled: Boolean,
+           val email: String,
+           val usernameU: String,
+           val passwordP: String,
+           val credentialsNonExpired: Boolean,
+           val accountNonExpired: Boolean,
+           val accountNonLocked: Boolean,
+           @OneToMany(cascade = [CascadeType.ALL]) private val authorities: List<Authority>
 ) : BaseEntity(), UserDetails {
 
     override fun getAuthorities() = authorities

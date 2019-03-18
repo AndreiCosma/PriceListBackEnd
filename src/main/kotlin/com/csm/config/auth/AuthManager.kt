@@ -1,7 +1,7 @@
 package com.csm.config.auth
 
 import com.csm.service.def.UserService
-import com.csm.uitl.JWTUtil
+import com.csm.util.JWTUtil
 import org.springframework.security.authentication.ReactiveAuthenticationManager
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping(RegisterController.PATH)
-@Api(tags = ["Access, Refresh token endpoint used to get tokens."])
+//@Api(tags = ["Access, Refresh token endpoint used to get tokens."])
 class RegisterController(
         val userRegistrationService: UserRegistrationService
 ) {
