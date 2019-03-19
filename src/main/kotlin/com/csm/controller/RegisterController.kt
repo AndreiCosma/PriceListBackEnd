@@ -28,8 +28,8 @@ class RegisterController(
     @ApiOperation(value = "Finish new user registration. After this the requested user will be active.")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("{code}")
-    fun completeNewUserRegistration(@PathVariable code: String) {
+    @GetMapping
+    fun completeNewUserRegistration(@RequestParam code: String) {
         userRegistrationService.completeNewUserRegistration(code)
     }
 }

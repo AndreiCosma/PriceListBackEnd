@@ -1,6 +1,6 @@
 package com.csm.domain.dto
 
-data class AuthRequestDTO (
+data class UserLoginRequestDTO (
     val username: String,
     val password: String
 )

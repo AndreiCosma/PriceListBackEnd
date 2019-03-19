@@ -26,7 +26,7 @@ class AuthManager(
 
         return userService.findById(id).map { user ->
             user ?: throw Exception("JWT token valid but user was since deleted from the system.")
-            UsernamePasswordAuthenticationToken(user, authToken, user.authorities).also {
+            UsernamePasswordAuthenticationToken(user, authToken, user.userAuthorities).also {
                 SecurityContextHolder.getContext().authentication = it
             }
         }

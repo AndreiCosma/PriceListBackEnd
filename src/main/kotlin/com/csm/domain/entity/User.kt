@@ -1,24 +1,24 @@
 package com.csm.domain.entity
 
 import org.springframework.security.core.userdetails.UserDetails
-import javax.persistence.CascadeType
-import javax.persistence.Entity
-import javax.persistence.OneToMany
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity(name = "UserEntity")
 @Table(name = "USER_TABLE")
-class User(val enabled: Boolean,
-           val email: String,
-           val usernameU: String,
-           val passwordP: String,
-           val credentialsNonExpired: Boolean,
-           val accountNonExpired: Boolean,
-           val accountNonLocked: Boolean,
-           @OneToMany(cascade = [CascadeType.ALL]) private val authorities: List<Authority>
-) : BaseEntity(), UserDetails {
+class User(
+        id: Long,
+        val enabled: Boolean,
+        val email: String,
+        val usernameU: String,
+        val passwordP: String,
+        val credentialsNonExpired: Boolean,
+        val accountNonExpired: Boolean,
+        val accountNonLocked: Boolean,
+        val refreshToken: String,
+        @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER) val userAuthorities: List<Authority>
+) : BaseEntity(id), UserDetails {
 
-    override fun getAuthorities() = authorities
+    override fun getAuthorities() = userAuthorities
 
     override fun isEnabled() = enabled
 

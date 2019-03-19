@@ -12,7 +12,7 @@ import java.util.concurrent.Executors
 class JdbcConfig {
 
     @Value("\${spring.datasource.maximum-pool-size:200}")
-    var connectionPoolSize : Int = 200
+    var connectionPoolSize: Int = 200
 
     @Bean
     fun jdbcScheduler() = Schedulers.fromExecutor(Executors.newFixedThreadPool(connectionPoolSize))

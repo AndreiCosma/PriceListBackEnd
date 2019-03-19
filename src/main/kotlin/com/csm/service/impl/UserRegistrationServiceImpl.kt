@@ -2,7 +2,9 @@ package com.csm.service.impl
 
 import com.csm.domain.dto.UserRegistrationDTO
 import com.csm.domain.entity.Authority
+import com.csm.domain.entity.Registration
 import com.csm.domain.entity.User
+import com.csm.domain.repo.RegistrationRepo
 import com.csm.domain.repo.UserRepo
 import com.csm.exception.UserRegistrationException
 import com.csm.service.def.UserRegistrationService
@@ -12,11 +14,13 @@ import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
+import java.util.*
 import javax.mail.internet.AddressException
 import javax.mail.internet.InternetAddress
 
 @Service
 class UserRegistrationServiceImpl(val userRepo: UserRepo,
+                                  val registrationRepo: RegistrationRepo,
                                   val bCryptPasswordEncoder: BCryptPasswordEncoder,
                                   val javaMailSender: JavaMailSender
 ) : UserRegistrationService {
@@ -26,36 +30,53 @@ class UserRegistrationServiceImpl(val userRepo: UserRepo,
     override fun registerNewUser(userRegistrationDTO: UserRegistrationDTO) {
         //Check user registration correctness
         userRegistrationDTO.isUserOk()
-        //ToDO: Check if user exists.
+        //Check if user exists.
+        if (userRepo.findByUsernameU(userRegistrationDTO.userName).isPresent) {
+            throw UserRegistrationException("Username already exists.")
+        }
 
         //Save user
         val user = userRepo.save(userRegistrationDTO.toUser())
+        val registration = registrationRepo.save(Registration(
+                id = 1L,
+                userId = user.id,
+                registrationUUID = UUID.randomUUID().toString(),
+                registrationDate = Date(),
+                activationDate = Date(),
+                active = false
+        ))
 
         //Send confirmation email.
         val simpleMailMessage = SimpleMailMessage()
         simpleMailMessage.setSubject("Price List account verification")
-        simpleMailMessage.setText("Account verification link http://localhost:8080/register/${user.id}")
+        simpleMailMessage.setText("Account verification link: http://localhost:8080/register?code=${registration.registrationUUID}\n " +
+                "If you did not registered ignore this email. \n Do not reply to this email.")
         simpleMailMessage.setTo(userRegistrationDTO.email)
         try {
             javaMailSender.send(simpleMailMessage)
         } catch (e: MailException) {
             //Delete user if email fails.
-            //ToDO: Investigate delete conflict if mail fails
-            logger.error("Email error ---> ${e.toString()}")
+            logger.error("Email error ---> $e")
             userRepo.delete(user)
+            registrationRepo.delete(registration)
             throw UserRegistrationException("Failed to send authorization code to email: ${userRegistrationDTO.email}.")
         }
     }
 
     override fun completeNewUserRegistration(token: String) {
         try {
-            userRepo.save(userRepo.getOne(token.toLong()).activateUser())
+            val registration = registrationRepo.findByRegistrationUUID(token)
+            registrationRepo.save(registration.completeRegistration())
+            userRepo.save(userRepo.getOne(registration.userId).activateUserAndGiveAuthorities())
         } catch (e: Exception) {
+            //ToDo: Investigate in case of error rollback
+            logger.error("User registration exception --> $e")
             throw UserRegistrationException("User registration failed.")
         }
     }
 
-    fun User.activateUser() = User(
+    fun User.activateUserAndGiveAuthorities() = User(
+            id = this.id,
             enabled = true,
             email = this.email,
             usernameU = this.usernameU,
@@ -63,10 +84,12 @@ class UserRegistrationServiceImpl(val userRepo: UserRepo,
             credentialsNonExpired = this.credentialsNonExpired,
             accountNonExpired = this.accountNonExpired,
             accountNonLocked = this.accountNonLocked,
-            authorities = this.authorities
+            refreshToken = "",
+            userAuthorities = listOf(Authority(user = this, userAuthority = Authority.ROLE_USER, id = 1L))
     )
 
     fun UserRegistrationDTO.toUser() = User(
+            id = 1L,
             enabled = false,
             email = this.email,
             usernameU = this.userName,
@@ -74,8 +97,17 @@ class UserRegistrationServiceImpl(val userRepo: UserRepo,
             credentialsNonExpired = true,
             accountNonExpired = true,
             accountNonLocked = true,
-            authorities = listOf(Authority(authority = Authority.ROLE_USER))
+            refreshToken = "",
+            userAuthorities = emptyList()
     )
+
+    fun Registration.completeRegistration() = Registration(
+            id = this.id,
+            userId = this.userId,
+            registrationUUID = this.registrationUUID,
+            registrationDate = this.registrationDate,
+            activationDate = Date(),
+            active = true)
 
     fun UserRegistrationDTO.isUserOk() {
         isValidEmailAddress(this.email)

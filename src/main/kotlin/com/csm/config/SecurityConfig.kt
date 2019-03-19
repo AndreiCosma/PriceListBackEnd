@@ -27,7 +27,7 @@ class SecurityConfig(
             .httpBasic().disable()
             .authenticationManager(authManager)
             .securityContextRepository(securityContextRepository)
-            .authorizeExchange().pathMatchers(RegisterController.PATH).permitAll()
+            .authorizeExchange().pathMatchers("/register").permitAll()
             .pathMatchers("/login", "/v2/api-docs", "/configuration/ui", "/swagger-resources/**", "/configuration/**", "/swagger-ui.html", "/webjars/**").permitAll()
             .and().build()
 
