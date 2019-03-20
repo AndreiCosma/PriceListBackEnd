@@ -2,11 +2,13 @@ package com.csm.service.impl
 
 import com.csm.domain.dto.UserRegistrationDTO
 import com.csm.domain.entity.Authority
+import com.csm.domain.entity.Email
 import com.csm.domain.entity.Registration
 import com.csm.domain.entity.User
+import com.csm.domain.repo.EmailRepo
 import com.csm.domain.repo.RegistrationRepo
 import com.csm.domain.repo.UserRepo
-import com.csm.exception.UserRegistrationException
+import com.csm.exception.user.UserRegistrationException
 import com.csm.service.def.UserRegistrationService
 import org.slf4j.LoggerFactory
 import org.springframework.mail.MailException
@@ -22,7 +24,8 @@ import javax.mail.internet.InternetAddress
 class UserRegistrationServiceImpl(val userRepo: UserRepo,
                                   val registrationRepo: RegistrationRepo,
                                   val bCryptPasswordEncoder: BCryptPasswordEncoder,
-                                  val javaMailSender: JavaMailSender
+                                  val javaMailSender: JavaMailSender,
+                                  val emailRepo: EmailRepo
 ) : UserRegistrationService {
     private val logger = LoggerFactory.getLogger(this.javaClass)
 
@@ -35,8 +38,19 @@ class UserRegistrationServiceImpl(val userRepo: UserRepo,
             throw UserRegistrationException("Username already exists.")
         }
 
+        //Check if email exists.
+        if (emailRepo.findByEmail(userRegistrationDTO.email).isPresent) {
+            throw UserRegistrationException("Email already exists.")
+        }
+
         //Save user
         val user = userRepo.save(userRegistrationDTO.toUser())
+        //Add primary email
+        user.userEmails.add(Email(baseEntityId = 1L, user = user, email = userRegistrationDTO.email, primary = true))
+        //Save changes
+        userRepo.save(user)
+
+
         val registration = registrationRepo.save(Registration(
                 id = 1L,
                 userId = user.id,
@@ -67,7 +81,9 @@ class UserRegistrationServiceImpl(val userRepo: UserRepo,
         try {
             val registration = registrationRepo.findByRegistrationUUID(token)
             registrationRepo.save(registration.completeRegistration())
-            userRepo.save(userRepo.getOne(registration.userId).activateUserAndGiveAuthorities())
+            val user = userRepo.getOne(registration.userId)
+            user.userAuthorities.add(Authority(user = user, userAuthority = Authority.ROLE_USER, id = 1L))
+            userRepo.save(user)
         } catch (e: Exception) {
             //ToDo: Investigate in case of error rollback
             logger.error("User registration exception --> $e")
@@ -75,41 +91,30 @@ class UserRegistrationServiceImpl(val userRepo: UserRepo,
         }
     }
 
-    fun User.activateUserAndGiveAuthorities() = User(
-            id = this.id,
-            enabled = true,
-            email = this.email,
-            usernameU = this.usernameU,
-            passwordP = this.passwordP,
-            credentialsNonExpired = this.credentialsNonExpired,
-            accountNonExpired = this.accountNonExpired,
-            accountNonLocked = this.accountNonLocked,
-            refreshToken = "",
-            userAuthorities = listOf(Authority(user = this, userAuthority = Authority.ROLE_USER, id = 1L))
-    )
-
-    fun UserRegistrationDTO.toUser() = User(
+    private fun UserRegistrationDTO.toUser() = User(
             id = 1L,
             enabled = false,
-            email = this.email,
             usernameU = this.userName,
             passwordP = bCryptPasswordEncoder.encode(this.password),
             credentialsNonExpired = true,
             accountNonExpired = true,
             accountNonLocked = true,
-            refreshToken = "",
-            userAuthorities = emptyList()
+            requiresTwoFactor = false,
+            userAuthorities = arrayListOf(),
+            userRefreshTokens = arrayListOf(),
+            userEmails = arrayListOf()
     )
 
-    fun Registration.completeRegistration() = Registration(
+    private fun Registration.completeRegistration() = Registration(
             id = this.id,
             userId = this.userId,
             registrationUUID = this.registrationUUID,
             registrationDate = this.registrationDate,
             activationDate = Date(),
-            active = true)
+            active = true
+    )
 
-    fun UserRegistrationDTO.isUserOk() {
+    private fun UserRegistrationDTO.isUserOk() {
         isValidEmailAddress(this.email)
         isPasswordValid(this.password, this.passwordConfirmation)
         isUsernameValid(this.userName)

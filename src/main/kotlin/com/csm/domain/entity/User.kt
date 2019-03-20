@@ -8,14 +8,15 @@ import javax.persistence.*
 class User(
         id: Long,
         val enabled: Boolean,
-        val email: String,
         val usernameU: String,
         val passwordP: String,
         val credentialsNonExpired: Boolean,
         val accountNonExpired: Boolean,
         val accountNonLocked: Boolean,
-        val refreshToken: String,
-        @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER) val userAuthorities: List<Authority>
+        val requiresTwoFactor: Boolean,
+        @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER) val userAuthorities: MutableList<Authority>,
+        @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY) val userRefreshTokens: MutableList<RefreshToken>,
+        @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY) val userEmails: MutableList<Email>
 ) : BaseEntity(id), UserDetails {
 
     override fun getAuthorities() = userAuthorities

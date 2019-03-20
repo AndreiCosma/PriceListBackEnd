@@ -12,7 +12,7 @@ import org.springframework.scheduling.annotation.Scheduled
 */
 
 @Component
-class CheckRegistrationSchTask(
+class DeleteOldNotActiveRegistrationsTask(
         val registrationRepo: RegistrationRepo,
         val userRepo: UserRepo
 ) {
@@ -35,7 +35,7 @@ class CheckRegistrationSchTask(
                 }
             }
         } catch (e: Exception) {
-            logger.error("Exception in checkRegistrationSchTask --> $e")
+            logger.error("Exception in ${this.javaClass.simpleName} --> $e")
         }
     }
 }

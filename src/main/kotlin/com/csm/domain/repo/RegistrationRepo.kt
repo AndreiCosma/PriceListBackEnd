@@ -15,6 +15,6 @@ interface RegistrationRepo : JpaRepository<Registration, Long> {
     fun findByRegistrationUUID(registrationUUID: String): Registration
 
     @Query("select r from Registration r where r.active = false")
-    fun findByActiveFalse(): List<Registration>
+    fun findByActiveFalse(): MutableList<Registration>
 
 }
