@@ -4,8 +4,8 @@ import com.csm.domain.dto.TokenDTO
 import com.csm.domain.entity.RefreshToken
 import com.csm.domain.repo.RefreshTokenRepo
 import com.csm.exception.token.RefreshTokenNotFoundException
+import com.csm.service.def.JWTUtilService
 import com.csm.service.def.RefreshTokenService
-import com.csm.util.JWTUtil
 import java.util.*
 
 
@@ -13,7 +13,7 @@ import java.util.*
 * Created by I503342 - 20/03/2019
 */
 class RefreshTokenServiceImpl(
-        val jwtUtil: JWTUtil,
+        val jwtUtil: JWTUtilService,
         val refreshTokenRepo: RefreshTokenRepo
 ) : RefreshTokenService {
     override fun refreshToken(tokenUUID: String): TokenDTO {

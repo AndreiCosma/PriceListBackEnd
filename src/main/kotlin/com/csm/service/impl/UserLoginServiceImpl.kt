@@ -6,8 +6,8 @@ import com.csm.domain.entity.RefreshToken
 import com.csm.domain.repo.ClientRepo
 import com.csm.domain.repo.UserRepo
 import com.csm.exception.user.UserLoginException
+import com.csm.service.def.JWTUtilService
 import com.csm.service.def.UserLoginService
-import com.csm.util.JWTUtil
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.*
@@ -18,7 +18,7 @@ import java.util.*
 */
 @Service
 class UserLoginServiceImpl(
-        val jwtUtil: JWTUtil,
+        val jwtUtil: JWTUtilService,
         val userRepo: UserRepo,
         val clientRepo: ClientRepo,
         val bCryptPasswordEncoder: BCryptPasswordEncoder

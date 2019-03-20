@@ -1,7 +1,8 @@
-package com.csm.util
+package com.csm.service.impl
 
 import com.csm.domain.entity.User
 import com.csm.exception.token.TokenNotValidException
+import com.csm.service.def.JWTUtilService
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.SignatureAlgorithm
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class JWTUtil {
+class JWTUtilServiceImpl : JWTUtilService {
     private val logger = LoggerFactory.getLogger(this.javaClass)
 
     companion object {
@@ -24,7 +25,7 @@ class JWTUtil {
     @Value("\${spring.jwt.expiration:28800}")
     private var expirationTime: Long = 28800
 
-    fun getClaims(token: String): Claims {
+    override fun getClaims(token: String): Claims {
         try {
             return Jwts.parser().setSigningKey(Base64.getEncoder().encodeToString(secret.toByteArray())).parseClaimsJws(token).body
         } catch (e: Exception) {
@@ -35,9 +36,9 @@ class JWTUtil {
 
     fun getExpirationDate(token: String): Date = getClaims(token).expiration
 
-    fun validateToken(token: String) = getExpirationDate(token).after(Date())
+    override fun validateToken(token: String) = getExpirationDate(token).after(Date())
 
-    fun generateToken(user: User): String {
+    override fun generateToken(user: User): String {
 
         val createdDate = Date()
         val expirationDate = Date(createdDate.time + expirationTime * 1000)

@@ -1,7 +1,7 @@
 package com.csm.config.auth
 
+import com.csm.service.def.JWTUtilService
 import com.csm.service.def.UserService
-import com.csm.util.JWTUtil
 import org.springframework.security.authentication.ReactiveAuthenticationManager
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
@@ -11,7 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 
 @Component
 class AuthManager(
-        private val jwtUtil: JWTUtil,
+        private val jwtUtil: JWTUtilService,
         private val userService: UserService
 ) : ReactiveAuthenticationManager {
 
