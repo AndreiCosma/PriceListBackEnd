@@ -34,8 +34,6 @@ class JWTUtilServiceImpl : JWTUtilService {
         }
     }
 
-    fun getExpirationDate(token: String): Date = getClaims(token).expiration
-
     override fun validateToken(token: String) = getExpirationDate(token).after(Date())
 
     override fun generateToken(user: User): String {
@@ -52,4 +50,7 @@ class JWTUtilServiceImpl : JWTUtilService {
                 .compact()
 
     }
+
+    fun getExpirationDate(token: String): Date = getClaims(token).expiration
+
 }

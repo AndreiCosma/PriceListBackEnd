@@ -7,6 +7,7 @@ import io.jsonwebtoken.Claims
 /*
 * Created by I503342 - 20/03/2019
 */
+
 interface JWTUtilService {
     fun getClaims(token: String): Claims
     fun validateToken(token: String): Boolean
