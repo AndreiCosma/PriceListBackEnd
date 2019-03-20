@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping(RegisterController.PATH)
-//@Api(tags = ["Access, Refresh token endpoint used to get tokens."])
+@Api(tags = ["Access, Refresh token endpoint used to get tokens."])
 class RegisterController(
         val userRegistrationService: UserRegistrationService
 ) {
@@ -25,10 +25,10 @@ class RegisterController(
         userRegistrationService.registerNewUser(userRegistrationDTO)
     }
 
-    @ApiOperation(value = "Finish new user registration. After this the requested user will be active.")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
+    @ApiOperation(value = "Finish new user registration. After this the requested user will be active.")
     fun completeNewUserRegistration(@RequestParam code: String) {
         userRegistrationService.completeNewUserRegistration(code)
     }

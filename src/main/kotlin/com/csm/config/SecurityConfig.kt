@@ -28,6 +28,7 @@ class SecurityConfig(
             .authenticationManager(authManager)
             .securityContextRepository(securityContextRepository)
             .authorizeExchange().pathMatchers("/register").permitAll()
+            .pathMatchers("/refresh").permitAll()
             .pathMatchers("/note").authenticated()
             .pathMatchers("/login", "/v2/api-docs", "/configuration/ui", "/swagger-resources/**", "/configuration/**", "/swagger-ui.html", "/webjars/**").permitAll()
             .and().build()

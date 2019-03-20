@@ -21,8 +21,8 @@ class LoginController(val userLoginService: UserLoginService) {
     }
 
     @PostMapping
-    @ApiOperation(value = "Use credentials to get access token and refresh token.")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Use credentials to get access token and refresh token.")
     fun login(@RequestBody userLoginRequestDTO: UserLoginRequestDTO) = Mono.just(userLoginService.loginUser(userLoginRequestDTO))
 }
