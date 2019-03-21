@@ -1,11 +1,7 @@
 spring:
   jwt:
-    pwd-encoder:
-      secret: "Secret!@#"
-      iterations: 33
-      key-length: 256
     secret: "ThisIsSecretForJWTHS512SignatureAlgorithmThatMUSTHave512bitsKeySize"
-    expiration: 28800
+    expiration: 3600000
   datasource:
     url: "jdbc:postgresql://localhost:5432/price-list"
     username: "postgres"

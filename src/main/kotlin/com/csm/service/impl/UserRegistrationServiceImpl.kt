@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service
 import java.util.*
 import javax.mail.internet.AddressException
 import javax.mail.internet.InternetAddress
+import javax.transaction.Transactional
 
 @Service
 class UserRegistrationServiceImpl(
@@ -32,7 +33,7 @@ class UserRegistrationServiceImpl(
 ) : UserRegistrationService {
     private val logger = LoggerFactory.getLogger(this.javaClass)
 
-
+    @Transactional
     override fun registerNewUser(userRegistrationDTO: UserRegistrationDTO) {
 
         clientService.checkClient(userRegistrationDTO.clientUUID, userRegistrationDTO.clientSecret)
@@ -74,6 +75,7 @@ class UserRegistrationServiceImpl(
         try {
             javaMailSender.send(simpleMailMessage)
         } catch (e: MailException) {
+            //ToDO: Investigate jpa error on delete if email send fails
             //Delete user if emailName fails.
             logger.error("Email error ---> $e")
             userRepo.delete(user)

@@ -26,7 +26,8 @@ class DeleteOldRefreshTokensTask(
     @Scheduled(fixedRate = DeleteOldNotActiveRegistrationsTask.HOUR)
     fun deleteOldRefreshTokens() {
         try {
-            val oldTokens = refreshTokenRepo.findOldTokens(Date())
+            //ToDo: Investigate which is the correct query
+            val oldTokens = refreshTokenRepo.findOldTokens()
             refreshTokenRepo.deleteAll(oldTokens)
         } catch (e: Exception) {
             logger.error("Exception in ${this.javaClass.simpleName} --> $e")

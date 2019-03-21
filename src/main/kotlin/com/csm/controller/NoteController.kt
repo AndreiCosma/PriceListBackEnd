@@ -1,7 +1,10 @@
 package com.csm.controller
 
+import io.swagger.annotations.Api
+import io.swagger.annotations.ApiOperation
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
+import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
 
@@ -11,6 +14,7 @@ import reactor.core.publisher.Mono
 
 @RequestMapping(NoteController.PATH)
 @RestController
+@Api(tags = ["Notes end-point."])
 class NoteController {
     companion object {
         const val PATH = "/note"
@@ -19,5 +23,6 @@ class NoteController {
     @GetMapping
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    fun getNotes() = Mono.just("Notes")
+    @ApiOperation(value = "Get all notes for a user.")
+    fun getNotes() = Flux.just("Notes")
 }

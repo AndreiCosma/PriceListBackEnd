@@ -13,6 +13,6 @@ import java.util.*
 interface RefreshTokenRepo : JpaRepository<RefreshToken, Long> {
     fun findByRefreshToken(refreshToken: String): Optional<RefreshToken>
 
-    @Query("select token from RefreshToken token where datediff(currentDate,token.creationDate)>=7")
-    fun findOldTokens(@Param("currentDate") currentDate: Date): MutableList<RefreshToken>
+    @Query("select token from RefreshToken token where date_part('day', age(now(), token.creationDate)) >= 7")
+    fun findOldTokens(): MutableList<RefreshToken>
 }

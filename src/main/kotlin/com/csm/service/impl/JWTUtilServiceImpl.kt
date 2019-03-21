@@ -15,15 +15,11 @@ import java.util.*
 class JWTUtilServiceImpl : JWTUtilService {
     private val logger = LoggerFactory.getLogger(this.javaClass)
 
-    companion object {
-        const val SERIAL_VERSION_UID = 1L
-    }
-
     @Value("\${spring.jwt.secret}")
     private lateinit var secret: String
 
-    @Value("\${spring.jwt.expiration:28800}")
-    private var expirationTime: Long = 28800
+    @Value("\${spring.jwt.expiration:3600000}")
+    private var expirationTime = 3600000L
 
     override fun getClaims(token: String): Claims {
         try {
@@ -39,7 +35,7 @@ class JWTUtilServiceImpl : JWTUtilService {
     override fun generateToken(user: User): String {
 
         val createdDate = Date()
-        val expirationDate = Date(createdDate.time + expirationTime * 1000)
+        val expirationDate = Date(createdDate.time + expirationTime)
 
         return Jwts.builder()
                 .setClaims(mapOf("userId" to "${user.id}"))
