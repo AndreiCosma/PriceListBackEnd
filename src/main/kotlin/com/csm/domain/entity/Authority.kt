@@ -3,11 +3,13 @@ package com.csm.domain.entity
 import org.springframework.security.core.GrantedAuthority
 import javax.persistence.CascadeType
 import javax.persistence.Entity
+import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 
 @Entity
 class Authority(
         @ManyToOne(cascade = [CascadeType.DETACH])
+        @JoinColumn(name = "user_id")
         private val user: User,
         private val userAuthority: String,
         id: Long

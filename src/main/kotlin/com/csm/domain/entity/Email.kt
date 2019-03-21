@@ -2,6 +2,7 @@ package com.csm.domain.entity
 
 import javax.persistence.CascadeType
 import javax.persistence.Entity
+import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 
 
@@ -12,6 +13,7 @@ import javax.persistence.ManyToOne
 class Email(
         baseEntityId: Long,
         @ManyToOne(cascade = [CascadeType.DETACH])
+        @JoinColumn(name = "user_id")
         val user: User,
         val emailName: String,
         val primaryEmail: Boolean

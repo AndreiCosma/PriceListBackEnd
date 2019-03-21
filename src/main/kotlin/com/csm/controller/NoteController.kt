@@ -25,4 +25,5 @@ class NoteController {
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Get all notes for a user.")
     fun getNotes() = Flux.just("Notes")
+
 }
