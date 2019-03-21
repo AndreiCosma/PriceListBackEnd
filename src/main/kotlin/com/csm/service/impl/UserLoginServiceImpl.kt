@@ -6,11 +6,14 @@ import com.csm.domain.entity.RefreshToken
 import com.csm.domain.repo.ClientRepo
 import com.csm.domain.repo.UserRepo
 import com.csm.exception.user.UserLoginException
+import com.csm.service.def.ClientService
 import com.csm.service.def.JWTUtilService
 import com.csm.service.def.UserLoginService
+import org.slf4j.LoggerFactory
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.*
+import javax.transaction.Transactional
 
 
 /*
@@ -19,28 +22,25 @@ import java.util.*
 @Service
 class UserLoginServiceImpl(
         val jwtUtil: JWTUtilService,
+        val clientService: ClientService,
         val userRepo: UserRepo,
-        val clientRepo: ClientRepo,
         val bCryptPasswordEncoder: BCryptPasswordEncoder
 ) : UserLoginService {
+    val logger = LoggerFactory.getLogger(this.javaClass)
+
+    @Transactional
     override fun loginUser(userLoginRequestDTO: UserLoginRequestDTO): TokenDTO {
-        val clientOptional = clientRepo.findByClientUUID(userLoginRequestDTO.clientUUID)
-
-        if (!clientOptional.isPresent) {
-            throw UserLoginException("Request client not valid.")
-        }
-
-        if (clientOptional.get().clientSecret != bCryptPasswordEncoder.encode(userLoginRequestDTO.clientSecret)) {
-            throw UserLoginException("Request client not valid.")
-        }
+        clientService.checkClient(userLoginRequestDTO.clientUUID, userLoginRequestDTO.clientSecret)
 
         val userOptional = userRepo.findByUsernameU(userLoginRequestDTO.username)
 
         if (!userOptional.isPresent) {
+            logger.error("User ${userLoginRequestDTO.username} does not exist.")
             throw UserLoginException("User not valid.")
         }
 
-        if (userOptional.get().passwordP != bCryptPasswordEncoder.encode(userLoginRequestDTO.password)) {
+        if (!bCryptPasswordEncoder.matches(userLoginRequestDTO.password, userOptional.get().passwordP)) {
+            logger.error("User password: ${userLoginRequestDTO.password} does not match")
             throw UserLoginException("User not valid.")
         }
         val refreshToken = RefreshToken(baseEntityId = 1L,

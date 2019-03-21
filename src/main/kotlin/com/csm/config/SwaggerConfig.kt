@@ -21,27 +21,27 @@ class SwaggerConfig : WebFluxConfigurationSupport() {
 
     @Bean
     fun api() = Docket(DocumentationType.SWAGGER_2)
-        .produces(setOf("application/json"))
-        .consumes(setOf("application/json"))
-        .securityContexts(listOf(
-            SecurityContext.builder()
-                    .securityReferences(listOf(
-                        SecurityReference(
-                            "JWT",
-                            arrayOf(AuthorizationScope("global", "accessEverything"))
-                        )
-                    ))
-                    .forPaths(PathSelectors.any())
-                    .build()
-        ))
-        .securitySchemes(listOf(
-            ApiKey("JWT", "Authorization", "header")
-        ))
-        .useDefaultResponseMessages(false)
-        .select()
-        .apis(RequestHandlerSelectors.any())
-        .paths(PathSelectors.any())
-        .build()
+            .produces(setOf("application/json"))
+            .consumes(setOf("application/json"))
+            .securityContexts(listOf(
+                    SecurityContext.builder()
+                            .securityReferences(listOf(
+                                    SecurityReference(
+                                            "JWT",
+                                            arrayOf(AuthorizationScope("global", "accessEverything"))
+                                    )
+                            ))
+                            .forPaths(PathSelectors.any())
+                            .build()
+            ))
+            .securitySchemes(listOf(
+                    ApiKey("JWT", "Authorization", "header")
+            ))
+            .useDefaultResponseMessages(false)
+            .select()
+            .apis(RequestHandlerSelectors.basePackage("com.csm.controller"))
+            .paths(PathSelectors.any())
+            .build()
 
     @Bean
     fun jackson2JsonEncoder(mapper: ObjectMapper) = Jackson2JsonEncoder(mapper)

@@ -12,7 +12,7 @@ interface RegistrationRepo : JpaRepository<Registration, Long> {
 
     fun findByUserId(userId: Long): Optional<Registration>
 
-    fun findByRegistrationUUID(registrationUUID: String): Registration
+    fun findByRegistrationUUID(registrationUUID: String): Optional<Registration>
 
     @Query("select r from Registration r where r.active = false")
     fun findByActiveFalse(): MutableList<Registration>

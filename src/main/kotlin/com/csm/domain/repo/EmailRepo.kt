@@ -9,5 +9,5 @@ import java.util.*
 * Created by I503342 - 20/03/2019
 */
 interface EmailRepo : JpaRepository<Email, Long> {
-    fun findByEmail(email: String): Optional<Email>
+    fun findByEmailName(emailName: String): Optional<Email>
 }
