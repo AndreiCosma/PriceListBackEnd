@@ -37,9 +37,9 @@ class UserRegistrationServiceImpl(
     override fun registerNewUser(userRegistrationDTO: UserRegistrationDTO) {
 
         clientService.checkClient(userRegistrationDTO.clientUUID, userRegistrationDTO.clientSecret)
-        //Check user registration correctness
+        //Check users registration correctness
         userRegistrationDTO.isUserOk()
-        //Check if user exists.
+        //Check if users exists.
         if (userRepo.findByUsernameU(userRegistrationDTO.userName).isPresent) {
             throw UserRegistrationException("Username already exists.")
         }
@@ -49,7 +49,7 @@ class UserRegistrationServiceImpl(
             throw UserRegistrationException("Email already exists.")
         }
 
-        //Save user
+        //Save users
         val user = userRepo.save(userRegistrationDTO.toUser())
         //Add primaryEmail emailName
         user.userEmails.add(Email(baseEntityId = 1L, user = user, emailName = userRegistrationDTO.email, primaryEmail = true))
@@ -58,9 +58,8 @@ class UserRegistrationServiceImpl(
 
 
         val registration = registrationRepo.save(Registration(
-                id = 1L,
-                userId = user.id,
-                registrationUUID = UUID.randomUUID().toString(),
+                id = UUID.randomUUID().toString(),
+                user = user,
                 registrationDate = Date(),
                 activationDate = Date(),
                 active = false
@@ -69,14 +68,14 @@ class UserRegistrationServiceImpl(
         //Send confirmation emailName.
         val simpleMailMessage = SimpleMailMessage()
         simpleMailMessage.setSubject("Price List account verification")
-        simpleMailMessage.setText("Account verification link: http://localhost:8080/register?code=${registration.registrationUUID}\n " +
+        simpleMailMessage.setText("Account verification link: http://localhost:8080/register?code=${registration.id}\n " +
                 "If you did not registered ignore this emailName. \n Do not reply to this emailName.")
         simpleMailMessage.setTo(userRegistrationDTO.email)
         try {
             javaMailSender.send(simpleMailMessage)
         } catch (e: MailException) {
             //ToDO: Investigate jpa error on delete if email send fails
-            //Delete user if emailName fails.
+            //Delete users if emailName fails.
             logger.error("Email error ---> $e")
             userRepo.delete(user)
             registrationRepo.delete(registration)
@@ -84,8 +83,9 @@ class UserRegistrationServiceImpl(
         }
     }
 
+    @Transactional
     override fun completeNewUserRegistration(token: String) {
-        val registration = registrationRepo.findByRegistrationUUID(token)
+        val registration = registrationRepo.findById(token)
 
         if (!registration.isPresent) {
             logger.error("No such registration exists $token")
@@ -94,8 +94,8 @@ class UserRegistrationServiceImpl(
 
         try {
             registrationRepo.save(registration.get().completeRegistration())
-            val user = userRepo.getOne(registration.get().userId)
-            user.userAuthorities.add(Authority(user = user, userAuthority = Authority.ROLE_USER, id = 1L))
+            val user = registration.get().user
+            user.userAuthorities.add(Authority(users = arrayListOf(user), userAuthority = Authority.ROLE_USER, id = 1L))
             userRepo.save(user.activateUser())
         } catch (e: Exception) {
             //ToDo: Investigate in case of error rollback
@@ -115,7 +115,9 @@ class UserRegistrationServiceImpl(
             requiresTwoFactor = false,
             userAuthorities = this.authorities,
             userRefreshTokens = this.userRefreshTokens,
-            userEmails = this.userEmails
+            userEmails = this.userEmails,
+            lists = this.lists,
+            registration = this.registration
     )
 
     private fun UserRegistrationDTO.toUser() = User(
@@ -129,13 +131,14 @@ class UserRegistrationServiceImpl(
             requiresTwoFactor = false,
             userAuthorities = arrayListOf(),
             userRefreshTokens = arrayListOf(),
-            userEmails = arrayListOf()
+            userEmails = arrayListOf(),
+            lists = arrayListOf(),
+            registration = null
     )
 
     private fun Registration.completeRegistration() = Registration(
             id = this.id,
-            userId = this.userId,
-            registrationUUID = this.registrationUUID,
+            user = this.user,
             registrationDate = this.registrationDate,
             activationDate = Date(),
             active = true

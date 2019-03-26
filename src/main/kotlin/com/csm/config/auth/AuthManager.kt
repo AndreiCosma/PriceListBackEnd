@@ -25,7 +25,7 @@ class AuthManager(
         val id = (jwtUtil.getClaims(authToken)["userId"] as String).toLong()
 
         return userService.findById(id).map { user ->
-            user ?: throw Exception("JWT token valid but user was since deleted from the system.")
+            user ?: throw Exception("JWT token valid but users was since deleted from the system.")
             UsernamePasswordAuthenticationToken(user, authToken, user.userAuthorities).also {
                 SecurityContextHolder.getContext().authentication = it
             }

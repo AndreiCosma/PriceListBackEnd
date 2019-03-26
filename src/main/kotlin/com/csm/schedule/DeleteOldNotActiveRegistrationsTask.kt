@@ -30,7 +30,7 @@ class DeleteOldNotActiveRegistrationsTask(
         try {
             registrationRepo.findByActiveFalse().forEach {
                 if (it.registrationDate.time > System.currentTimeMillis() - HOUR) {
-                    userRepo.deleteById(it.userId)
+                    userRepo.delete(it.user)
                     registrationRepo.delete(it)
                 }
             }

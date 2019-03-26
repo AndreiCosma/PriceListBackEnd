@@ -1,18 +1,16 @@
 package com.csm.domain.entity
 
 import org.springframework.security.core.GrantedAuthority
-import javax.persistence.CascadeType
-import javax.persistence.Entity
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
+import javax.persistence.*
 
 @Entity
+@Table(name = "authority")
 class Authority(
-        @ManyToOne(cascade = [CascadeType.DETACH])
-        @JoinColumn(name = "user_id")
-        private val user: User,
-        private val userAuthority: String,
-        id: Long
+        id: Long,
+        @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.DETACH], mappedBy = "userAuthorities")
+        private val users: MutableList<User>,
+        @Column(name = "name")
+        private val userAuthority: String
 ) : BaseEntity(id), GrantedAuthority {
     companion object {
         const val ROLE_USER = "ROLE_USER"

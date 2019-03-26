@@ -23,7 +23,7 @@ class NoteController {
     @GetMapping
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Get all notes for a user.")
+    @ApiOperation(value = "Get all notes for a users.")
     fun getNotes() = Flux.just("Notes")
 
 }

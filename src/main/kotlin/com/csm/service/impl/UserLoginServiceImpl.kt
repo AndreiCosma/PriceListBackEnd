@@ -43,6 +43,7 @@ class UserLoginServiceImpl(
             logger.error("User password: ${userLoginRequestDTO.password} does not match")
             throw UserLoginException("User not valid.")
         }
+
         val refreshToken = RefreshToken(baseEntityId = 1L,
                 user = userOptional.get(),
                 refreshToken = UUID.randomUUID().toString(),

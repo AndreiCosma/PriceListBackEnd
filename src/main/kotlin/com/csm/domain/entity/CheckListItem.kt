@@ -1,17 +1,20 @@
 package com.csm.domain.entity
 
-import javax.persistence.CascadeType
-import javax.persistence.Entity
-import javax.persistence.ManyToOne
+import javax.persistence.*
 
 
 /*
 * Created by I503342 - 21/03/2019
 */
 @Entity
+@Table(name = "check_list_item")
 class CheckListItem(
         baseEntityId: Long,
+        @Column(name = "name")
         val name: String,
+        @Column(name = "checked")
         val checked: Boolean,
-        @ManyToOne(cascade = [CascadeType.DETACH]) val checkList: CheckList
+        @ManyToOne(cascade = [CascadeType.DETACH])
+        @JoinColumn(name = "check_list_id")
+        val checkList: CheckList
 ) : BaseEntity(baseEntityId)

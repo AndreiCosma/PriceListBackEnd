@@ -20,7 +20,7 @@ class RegisterController(
     @PostMapping
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    @ApiOperation(value = "Register new user. At this point the new user is not active.")
+    @ApiOperation(value = "Register new users. At this point the new users is not active.")
     fun registerNewUser(@RequestBody userRegistrationDTO: UserRegistrationDTO) {
         userRegistrationService.registerNewUser(userRegistrationDTO)
     }
@@ -28,7 +28,7 @@ class RegisterController(
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
-    @ApiOperation(value = "Finish new user registration. After this the requested user will be active.")
+    @ApiOperation(value = "Finish new users registration. After this the requested users will be active.")
     fun completeNewUserRegistration(@RequestParam code: String) {
         userRegistrationService.completeNewUserRegistration(code)
     }

@@ -1,6 +1,5 @@
 package com.csm.service.def
 
-import com.csm.domain.dto.CheckListDTO
 import com.csm.domain.dto.CheckListItemDTO
 
 

@@ -22,3 +22,9 @@ spring:
             enable: true
     protocol: smtp
     test-connection: false
+  flyway:
+    locations:
+      - db
+    clean-disabled: false
+    check-location: false
+    baseline-on-migrate: true
