@@ -52,7 +52,7 @@ class UserRegistrationServiceImpl(
         //Save users
         val user = userRepo.save(userRegistrationDTO.toUser())
         //Add primaryEmail emailName
-        user.userEmails.add(Email(baseEntityId = 1L, user = user, emailName = userRegistrationDTO.email, primaryEmail = true))
+        user.userEmails.add(Email(baseEntityId = 1L, user = user, emailName = userRegistrationDTO.email, mainEmail = user))
         //Save changes
         userRepo.save(user)
 
@@ -117,14 +117,15 @@ class UserRegistrationServiceImpl(
             userRefreshTokens = this.userRefreshTokens,
             userEmails = this.userEmails,
             lists = this.lists,
-            registration = this.registration
+            registration = this.registration,
+            mainEmail = this.mainEmail
     )
 
     private fun UserRegistrationDTO.toUser() = User(
             id = 1L,
             enabled = false,
             usernameU = this.userName,
-            passwordP = bCryptPasswordEncoder.encode(this.password),
+            passwordP = bCryptPasswordEncoder.encode(this.password + this.userName),
             credentialsNonExpired = true,
             accountNonExpired = true,
             accountNonLocked = true,
@@ -133,7 +134,8 @@ class UserRegistrationServiceImpl(
             userRefreshTokens = arrayListOf(),
             userEmails = arrayListOf(),
             lists = arrayListOf(),
-            registration = null
+            registration = null,
+            mainEmail = null
     )
 
     private fun Registration.completeRegistration() = Registration(

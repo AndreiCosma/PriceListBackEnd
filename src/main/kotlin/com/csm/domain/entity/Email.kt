@@ -15,6 +15,6 @@ class Email(
         val user: User,
         @Column(name = "name")
         val emailName: String,
-        @Column(name = "primary_email")
-        val primaryEmail: Boolean
+        @OneToOne(mappedBy = "mainEmail", cascade = [CascadeType.DETACH], optional = false)
+        val mainEmail: User
 ) : BaseEntity(baseEntityId)

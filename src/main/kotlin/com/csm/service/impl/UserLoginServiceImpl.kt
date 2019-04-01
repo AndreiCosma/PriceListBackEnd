@@ -39,7 +39,7 @@ class UserLoginServiceImpl(
             throw UserLoginException("User not valid.")
         }
 
-        if (!bCryptPasswordEncoder.matches(userLoginRequestDTO.password, userOptional.get().passwordP)) {
+        if (!bCryptPasswordEncoder.matches(userLoginRequestDTO.password + userLoginRequestDTO.username, userOptional.get().passwordP)) {
             logger.error("User password: ${userLoginRequestDTO.password} does not match")
             throw UserLoginException("User not valid.")
         }

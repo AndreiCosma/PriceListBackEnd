@@ -7,6 +7,7 @@ CREATE TABLE "app_user" (
 	"account_non_expired" BOOLEAN NOT NULL,
 	"account_non_locked" BOOLEAN NOT NULL,
 	"requires_two_factor" BOOLEAN NOT NULL,
+	"main_email" bigint NOT NULL UNIQUE,
 	CONSTRAINT app_user_pk PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
@@ -26,8 +27,8 @@ CREATE TABLE "authority" (
 
 CREATE TABLE "app_user_link_authority" (
 	"id" serial NOT NULL,
-	"authority_id" bigint NOT NULL UNIQUE,
-	"app_user_id" bigint NOT NULL UNIQUE,
+	"authority_id" bigint NOT NULL,
+	"app_user_id" bigint NOT NULL,
 	CONSTRAINT app_user_link_authority_pk PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
@@ -39,7 +40,6 @@ CREATE TABLE "email" (
 	"id" serial NOT NULL,
 	"app_user_id" bigint NOT NULL UNIQUE,
 	"name" varchar NOT NULL UNIQUE,
-	"primary_email" BOOLEAN NOT NULL,
 	CONSTRAINT email_pk PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
@@ -74,7 +74,6 @@ CREATE TABLE "check_list_item" (
 	"id" serial NOT NULL,
 	"check_list_id" bigint NOT NULL UNIQUE,
 	"name" varchar(128) NOT NULL,
-	"checked" BOOLEAN NOT NULL,
 	CONSTRAINT check_list_item_pk PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
@@ -84,8 +83,8 @@ CREATE TABLE "check_list_item" (
 
 CREATE TABLE "check_list_link_app_user" (
 	"id" serial NOT NULL,
-	"app_user_id" bigint NOT NULL UNIQUE,
-	"check_list_id" bigint NOT NULL UNIQUE,
+	"app_user_id" bigint NOT NULL,
+	"check_list_id" bigint NOT NULL,
 	CONSTRAINT check_list_link_app_user_pk PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
@@ -106,17 +105,7 @@ CREATE TABLE "registration" (
 
 
 
-CREATE TABLE "client" (
-	"id" serial NOT NULL,
-	"name" varchar(128) NOT NULL UNIQUE,
-	"password" varchar(128) NOT NULL UNIQUE,
-	CONSTRAINT client_pk PRIMARY KEY ("id")
-) WITH (
-  OIDS=FALSE
-);
-
-
-
+ALTER TABLE "app_user" ADD CONSTRAINT "app_user_fk0" FOREIGN KEY ("main_email") REFERENCES "email"("id");
 
 
 ALTER TABLE "app_user_link_authority" ADD CONSTRAINT "app_user_link_authority_fk0" FOREIGN KEY ("authority_id") REFERENCES "authority"("id");
@@ -133,4 +122,3 @@ ALTER TABLE "check_list_link_app_user" ADD CONSTRAINT "check_list_link_app_user_
 ALTER TABLE "check_list_link_app_user" ADD CONSTRAINT "check_list_link_app_user_fk1" FOREIGN KEY ("check_list_id") REFERENCES "check_list"("id");
 
 ALTER TABLE "registration" ADD CONSTRAINT "registration_fk0" FOREIGN KEY ("app_user_id") REFERENCES "app_user"("id");
-

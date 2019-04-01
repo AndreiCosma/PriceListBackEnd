@@ -42,7 +42,10 @@ class User(
         @OneToMany(cascade = [CascadeType.DETACH, CascadeType.PERSIST], orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "user")
         val userEmails: MutableList<Email>,
         @OneToOne(cascade = [CascadeType.DETACH, CascadeType.PERSIST], orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "user")
-        val registration: Registration?
+        val registration: Registration?,
+        @OneToOne(optional = false)
+        @JoinColumn(name = "main_email")
+        val mainEmail: Email?
 ) : BaseEntity(id), UserDetails {
 
     override fun getAuthorities() = userAuthorities
