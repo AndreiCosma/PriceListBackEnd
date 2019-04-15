@@ -1,8 +1,13 @@
 package com.csm.service.impl
 
 import com.csm.domain.dto.CheckListDTO
+import com.csm.domain.dto.CheckListItemDTO
+import com.csm.domain.entity.CheckList
+import com.csm.domain.entity.CheckListItem
 import com.csm.domain.repo.CheckListRepo
+import com.csm.domain.repo.UserRepo
 import com.csm.service.def.CheckListService
+import com.csm.service.def.UserService
 import org.springframework.stereotype.Service
 
 
@@ -11,30 +16,61 @@ import org.springframework.stereotype.Service
 */
 @Service
 class CheckListServiceImpl(
-        val checkListRepo: CheckListRepo
+        val checkListRepo: CheckListRepo,
+        val userRepo: UserRepo
 ) : CheckListService {
-    override fun createCheckList(): CheckListDTO {
+
+    override fun createCheckList(name: String): CheckListDTO {
+        //Get user
+        val user = userRepo.findByUsernameU(usernameU = name)
+        //Create List
+        val checkList = CheckList(
+                baseEntityId = 1L,
+                name = "New Check List",
+                items = mutableListOf(),
+                users = mutableListOf(user)
+        )
+        user.lists.add(checkList)
+        userRepo.save(user)
+        //Return list
+        return checkListRepo.save(checkList).toDTO()
+    }
+
+    override fun saveRemoteCreatedCheckList(checkListDTO: CheckListDTO, name: String) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun saveRemoteCreatedCheckList(checkListDTO: CheckListDTO) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun getCheckList(id: Long, name: String): CheckListDTO = checkListRepo.findByIdAndUser(id, userRepo.findByUsernameU(name)).toDTO()
+
+    override fun getCheckLists(name: String): List<CheckListDTO> = checkListRepo.findByUser(userRepo.findByUsernameU(name)).toDTO()
+
+    override fun updateCheckList(checkListDTO: CheckListDTO, name: String) {
+        // Get list from database.
+        val checkList = checkListRepo.findByIdAndUser(id = checkListDTO.id, user = userRepo.findByUsernameU(name))
+
+        //ToDo: Update only fields that are not null in the DTO
+
+        //Save list
+        checkListRepo.save(checkList)
     }
 
-    override fun getCheckList(id: Long): CheckListDTO {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun deleteCheckList(id: Long, name: String) = checkListRepo.deleteByIdAndUser(id, userRepo.findByUsernameU(name))
 
-    override fun getCheckLists(): List<CheckListDTO> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    private fun CheckList.toDTO() = CheckListDTO(
+            id = this.id,
+            name = this.name,
+            items = this.items.toDTO(this.id)
+    )
 
-    override fun updateCheckList(checkListDTO: CheckListDTO) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    private fun MutableList<CheckListItem>.toDTO(parentId: Long): MutableList<CheckListItemDTO> = this.map { element -> element.toDTO(parentId) }.toMutableList()
 
-    override fun deleteCheckList(id: Long) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    private fun CheckListItem.toDTO(parentId: Long) = CheckListItemDTO(
+            listId = parentId,
+            id = this.id,
+            name = this.name,
+            checked = this.checked
+    )
+
+    private fun List<CheckList>.toDTO() = this.map { element -> element.toDTO() }
 
 }

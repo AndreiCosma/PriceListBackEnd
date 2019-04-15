@@ -1,8 +1,18 @@
 package com.csm.domain.dto
 
-data class UserRegistrationDTO(val email: String,
-                               val userName: String,
-                               val password: String,
-                               val passwordConfirmation: String,
-                               val clientUUID: String,
-                               val clientSecret: String)
+import javax.validation.constraints.NotNull
+
+data class UserRegistrationDTO(
+        @NotNull
+        val email: String,
+        @NotNull
+        val userName: String,
+        @NotNull
+        val password: String,
+        @NotNull
+        val passwordConfirmation: String,
+        @NotNull
+        val clientUUID: String,
+        @NotNull
+        val clientSecret: String
+)

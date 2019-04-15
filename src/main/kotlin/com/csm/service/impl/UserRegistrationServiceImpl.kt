@@ -51,11 +51,12 @@ class UserRegistrationServiceImpl(
 
         //Save users
         val user = userRepo.save(userRegistrationDTO.toUser())
-        //Add primaryEmail emailName
+        //Add email to user email list and as primary email
         user.userEmails.add(Email(baseEntityId = 1L, user = user, emailName = userRegistrationDTO.email, mainEmail = user))
+        //Set initial primary email
+        user.setInitialPrimaryEmail()
         //Save changes
         userRepo.save(user)
-
 
         val registration = registrationRepo.save(Registration(
                 id = UUID.randomUUID().toString(),
@@ -104,11 +105,28 @@ class UserRegistrationServiceImpl(
         }
     }
 
+    private fun User.setInitialPrimaryEmail() = User(
+            id = this.id,
+            enabled = this.enabled,
+            usernameU = this.usernameU,
+            passwordP = this.password,
+            credentialsNonExpired = true,
+            accountNonExpired = true,
+            accountNonLocked = true,
+            requiresTwoFactor = false,
+            userAuthorities = this.authorities,
+            userRefreshTokens = this.userRefreshTokens,
+            userEmails = this.userEmails,
+            lists = this.lists,
+            registration = this.registration,
+            mainEmail = this.userEmails.first()
+    )
+
     private fun User.activateUser() = User(
             id = this.id,
             enabled = true,
             usernameU = this.usernameU,
-            passwordP = bCryptPasswordEncoder.encode(this.password),
+            passwordP = this.password,
             credentialsNonExpired = true,
             accountNonExpired = true,
             accountNonLocked = true,
@@ -124,8 +142,8 @@ class UserRegistrationServiceImpl(
     private fun UserRegistrationDTO.toUser() = User(
             id = 1L,
             enabled = false,
-            usernameU = this.userName,
-            passwordP = bCryptPasswordEncoder.encode(this.password + this.userName),
+            usernameU = this.userName.trim(),
+            passwordP = bCryptPasswordEncoder.encode(this.password.trim() + this.userName.trim()),
             credentialsNonExpired = true,
             accountNonExpired = true,
             accountNonLocked = true,

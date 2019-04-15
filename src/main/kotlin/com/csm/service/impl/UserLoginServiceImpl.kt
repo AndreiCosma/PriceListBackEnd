@@ -3,7 +3,6 @@ package com.csm.service.impl
 import com.csm.domain.dto.TokenDTO
 import com.csm.domain.dto.UserLoginRequestDTO
 import com.csm.domain.entity.RefreshToken
-import com.csm.domain.repo.ClientRepo
 import com.csm.domain.repo.UserRepo
 import com.csm.exception.user.UserLoginException
 import com.csm.service.def.ClientService
@@ -26,21 +25,21 @@ class UserLoginServiceImpl(
         val userRepo: UserRepo,
         val bCryptPasswordEncoder: BCryptPasswordEncoder
 ) : UserLoginService {
-    val logger = LoggerFactory.getLogger(this.javaClass)
+    val logger = LoggerFactory.getLogger(this.javaClass)!!
 
     @Transactional
     override fun loginUser(userLoginRequestDTO: UserLoginRequestDTO): TokenDTO {
-        clientService.checkClient(userLoginRequestDTO.clientUUID, userLoginRequestDTO.clientSecret)
+        clientService.checkClient(userLoginRequestDTO.clientUUID.trim(), userLoginRequestDTO.clientSecret.trim())
 
-        val userOptional = userRepo.findByUsernameU(userLoginRequestDTO.username)
+        val userOptional = userRepo.findByUsernameU(userLoginRequestDTO.username.trim())
 
         if (!userOptional.isPresent) {
-            logger.error("User ${userLoginRequestDTO.username} does not exist.")
+            logger.error("User ${userLoginRequestDTO.username.trim()} does not exist.")
             throw UserLoginException("User not valid.")
         }
 
-        if (!bCryptPasswordEncoder.matches(userLoginRequestDTO.password + userLoginRequestDTO.username, userOptional.get().passwordP)) {
-            logger.error("User password: ${userLoginRequestDTO.password} does not match")
+        if (!bCryptPasswordEncoder.matches(userLoginRequestDTO.password.trim() + userLoginRequestDTO.username.trim(), userOptional.get().passwordP.trim())) {
+            logger.error("User password: ${userLoginRequestDTO.password.trim()} does not match")
             throw UserLoginException("User not valid.")
         }
 
@@ -48,7 +47,7 @@ class UserLoginServiceImpl(
                 user = userOptional.get(),
                 refreshToken = UUID.randomUUID().toString(),
                 creationDate = Date(),
-                deviceUUID = userLoginRequestDTO.deviceUUID)
+                deviceUUID = userLoginRequestDTO.deviceUUID.trim())
 
         userOptional.get().userRefreshTokens.add(refreshToken)
 
