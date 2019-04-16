@@ -22,7 +22,7 @@ class AuthManager(
             return Mono.empty()
         }
 
-        val id = (jwtUtil.getClaims(authToken)["userId"] as String).toLong()
+        val id = (jwtUtil.getClaims(authToken)["userId"] as String).toString()
 
         return userService.findById(id).map { user ->
             user ?: throw Exception("JWT token valid but users was since deleted from the system.")

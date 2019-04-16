@@ -19,8 +19,7 @@ import java.util.*
 */
 @Service
 class CheckListServiceImpl(
-        val checkListRepo: CheckListRepo,
-        val userRepo: UserRepo
+        val checkListRepo: CheckListRepo
 ) : CheckListService {
 
     override fun createCheckList(user: User): CheckListDTO {
@@ -29,16 +28,21 @@ class CheckListServiceImpl(
                 baseEntityId = UUID.randomUUID().toString(),
                 name = "New Check List",
                 items = mutableListOf(),
+                owner = user,
                 users = mutableListOf(user)
         )
+        user.ownedLists.add(checkList)
         user.lists.add(checkList)
-        userRepo.save(user)
         //Return list
         return checkListRepo.save(checkList).toDTO()
     }
 
     override fun saveRemoteCreatedCheckList(checkListDTO: CheckListDTO, user: User) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val checkList = checkListDTO.toPersistable(user = user)
+        checkList.items.addAll(checkListDTO.items.toPersistable(checkList))
+        user.ownedLists.add(checkList)
+        user.lists.add(checkList)
+        checkListRepo.save(checkList)
     }
 
     override fun getCheckList(id: String, user: User): CheckListDTO = checkListRepo.findByIdAndUser(id = id, user = user).toDTO()
@@ -74,4 +78,20 @@ class CheckListServiceImpl(
 
     fun List<CheckList>.toDTO() = this.map { element -> element.toDTO() }
 
+    fun CheckListDTO.toPersistable(user: User) = CheckList(
+            baseEntityId = this.id,
+            name = this.name,
+            items = mutableListOf(),
+            owner = user,
+            users = mutableListOf(user)
+    )
+
+    fun MutableList<CheckListItemDTO>.toPersistable(parent: CheckList) = this.map { item -> item.toPersistable(parent) }.toMutableList()
+
+    fun CheckListItemDTO.toPersistable(parent: CheckList) = CheckListItem(
+            baseEntityId = UUID.randomUUID().toString(),
+            name = this.name,
+            checked = this.checked,
+            checkList = parent
+    )
 }

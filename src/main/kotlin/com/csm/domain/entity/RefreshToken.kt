@@ -14,9 +14,9 @@ class RefreshToken(
         @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.DETACH])
         @JoinColumn(name = "app_user_id")
         val user: User,
-        @Column(name = "token")
+        @Column(name = "token", length = 36)
         val refreshToken: String,
-        @Column(name = "device_uuid")
+        @Column(name = "device_uuid", length = 36)
         val deviceUUID: String,
         @Column(name = "creation_date")
         val creationDate: Date

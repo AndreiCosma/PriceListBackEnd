@@ -13,7 +13,7 @@ class Email(
         @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.DETACH])
         @JoinColumn(name = "app_user_id")
         val user: User,
-        @Column(name = "name")
+        @Column(name = "name", length = 128)
         val emailName: String,
         @OneToOne(mappedBy = "mainEmail", cascade = [CascadeType.DETACH], optional = false)
         val mainEmail: User

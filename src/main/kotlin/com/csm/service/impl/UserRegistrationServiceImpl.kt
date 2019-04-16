@@ -117,6 +117,7 @@ class UserRegistrationServiceImpl(
             userAuthorities = this.authorities,
             userRefreshTokens = this.userRefreshTokens,
             userEmails = this.userEmails,
+            ownedLists = this.ownedLists,
             lists = this.lists,
             registration = this.registration,
             mainEmail = this.userEmails.first()
@@ -134,6 +135,7 @@ class UserRegistrationServiceImpl(
             userAuthorities = this.authorities,
             userRefreshTokens = this.userRefreshTokens,
             userEmails = this.userEmails,
+            ownedLists = this.ownedLists,
             lists = this.lists,
             registration = this.registration,
             mainEmail = this.mainEmail
@@ -151,6 +153,7 @@ class UserRegistrationServiceImpl(
             userAuthorities = arrayListOf(),
             userRefreshTokens = arrayListOf(),
             userEmails = arrayListOf(),
+            ownedLists = arrayListOf(),
             lists = arrayListOf(),
             registration = null,
             mainEmail = null

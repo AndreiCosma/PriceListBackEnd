@@ -1,5 +1,5 @@
 CREATE TABLE "app_user" (
-	"id" serial NOT NULL,
+	"id" char(36) NOT NULL,
 	"username" varchar(128) NOT NULL UNIQUE,
 	"password" varchar(128) NOT NULL,
 	"enabled" BOOLEAN NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE "app_user" (
 
 
 CREATE TABLE "authority" (
-	"id" serial NOT NULL UNIQUE,
+	"id" char(36) NOT NULL UNIQUE,
 	"name" varchar(128) NOT NULL UNIQUE,
 	CONSTRAINT authority_pk PRIMARY KEY ("id")
 ) WITH (
@@ -26,9 +26,9 @@ CREATE TABLE "authority" (
 
 
 CREATE TABLE "app_user_link_authority" (
-	"id" serial NOT NULL,
-	"authority_id" bigint NOT NULL,
-	"app_user_id" bigint NOT NULL,
+	"id" char(36) NOT NULL,
+	"authority_id" char(36) NOT NULL UNIQUE,
+	"app_user_id" char(36) NOT NULL UNIQUE,
 	CONSTRAINT app_user_link_authority_pk PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
@@ -37,9 +37,9 @@ CREATE TABLE "app_user_link_authority" (
 
 
 CREATE TABLE "email" (
-	"id" serial NOT NULL,
-	"app_user_id" bigint NOT NULL UNIQUE,
-	"name" varchar NOT NULL UNIQUE,
+	"id" char(36) NOT NULL,
+	"app_user_id" char(36) NOT NULL UNIQUE,
+	"name" varchar(128) NOT NULL UNIQUE,
 	CONSTRAINT email_pk PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
@@ -48,10 +48,10 @@ CREATE TABLE "email" (
 
 
 CREATE TABLE "refresh_token" (
-	"id" serial NOT NULL,
-	"app_user_id" bigint NOT NULL UNIQUE,
-	"token" varchar(128) NOT NULL,
-	"device_uuid" varchar(128) NOT NULL UNIQUE,
+	"id" char(36) NOT NULL,
+	"app_user_id" char(36) NOT NULL UNIQUE,
+	"token" char(36) NOT NULL,
+	"device_uuid" char(36) NOT NULL UNIQUE,
 	"creation_date" DATE NOT NULL,
 	CONSTRAINT refresh_token_pk PRIMARY KEY ("id")
 ) WITH (
@@ -61,7 +61,8 @@ CREATE TABLE "refresh_token" (
 
 
 CREATE TABLE "check_list" (
-	"id" serial NOT NULL,
+	"id" char(36) NOT NULL,
+	"app_user_id" char(36) NOT NULL,
 	"name" varchar(128) NOT NULL,
 	CONSTRAINT check_list_pk PRIMARY KEY ("id")
 ) WITH (
@@ -71,8 +72,8 @@ CREATE TABLE "check_list" (
 
 
 CREATE TABLE "check_list_item" (
-	"id" serial NOT NULL,
-	"check_list_id" bigint NOT NULL UNIQUE,
+	"id" char(36) NOT NULL,
+	"check_list_id" char(36) NOT NULL UNIQUE,
 	"name" varchar(128) NOT NULL,
 	CONSTRAINT check_list_item_pk PRIMARY KEY ("id")
 ) WITH (
@@ -82,9 +83,9 @@ CREATE TABLE "check_list_item" (
 
 
 CREATE TABLE "check_list_link_app_user" (
-	"id" serial NOT NULL,
-	"app_user_id" bigint NOT NULL,
-	"check_list_id" bigint NOT NULL,
+	"id" char(36) NOT NULL,
+	"app_user_id" char(36) NOT NULL UNIQUE,
+	"check_list_id" char(36) NOT NULL UNIQUE,
 	CONSTRAINT check_list_link_app_user_pk PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
@@ -93,12 +94,23 @@ CREATE TABLE "check_list_link_app_user" (
 
 
 CREATE TABLE "registration" (
-	"uuid" varchar NOT NULL,
-	"app_user_id" bigint NOT NULL UNIQUE,
+	"uuid" char(36) NOT NULL,
+	"app_user_id" char(36) NOT NULL UNIQUE,
 	"registration_date" DATE NOT NULL,
 	"activation_date" DATE NOT NULL,
 	"active" BOOLEAN NOT NULL,
 	CONSTRAINT registration_pk PRIMARY KEY ("uuid")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "client" (
+	"id" char(36) NOT NULL,
+	"name" char(36) NOT NULL,
+	"password" char(36) NOT NULL,
+	CONSTRAINT client_pk PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
 );
@@ -115,6 +127,7 @@ ALTER TABLE "email" ADD CONSTRAINT "email_fk0" FOREIGN KEY ("app_user_id") REFER
 
 ALTER TABLE "refresh_token" ADD CONSTRAINT "refresh_token_fk0" FOREIGN KEY ("app_user_id") REFERENCES "app_user"("id");
 
+ALTER TABLE "check_list" ADD CONSTRAINT "check_list_fk0" FOREIGN KEY ("app_user_id") REFERENCES "app_user"("id");
 
 ALTER TABLE "check_list_item" ADD CONSTRAINT "check_list_item_fk0" FOREIGN KEY ("check_list_id") REFERENCES "check_list"("id");
 
@@ -122,3 +135,4 @@ ALTER TABLE "check_list_link_app_user" ADD CONSTRAINT "check_list_link_app_user_
 ALTER TABLE "check_list_link_app_user" ADD CONSTRAINT "check_list_link_app_user_fk1" FOREIGN KEY ("check_list_id") REFERENCES "check_list"("id");
 
 ALTER TABLE "registration" ADD CONSTRAINT "registration_fk0" FOREIGN KEY ("app_user_id") REFERENCES "app_user"("id");
+

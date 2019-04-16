@@ -9,9 +9,9 @@ import springfox.documentation.schema.property.BeanPropertyDefinitions.name
 @Table(name = "app_user")
 class User(
         id: String,
-        @Column(name = "username")
+        @Column(name = "username", length = 128)
         val usernameU: String,
-        @Column(name = "password")
+        @Column(name = "password", length = 256)
         val passwordP: String,
         @Column(name = "enabled")
         val enabled: Boolean,
@@ -37,6 +37,8 @@ class User(
                 inverseJoinColumns = [JoinColumn(name = "check_list_id")]
         )
         val lists: MutableList<CheckList>,
+        @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "owner")
+        val ownedLists: MutableList<CheckList>,
         @OneToMany(cascade = [CascadeType.DETACH, CascadeType.PERSIST], orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "user")
         val userRefreshTokens: MutableList<RefreshToken>,
         @OneToMany(cascade = [CascadeType.DETACH, CascadeType.PERSIST], orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "user")

@@ -10,7 +10,7 @@ import javax.persistence.*
 @Table(name = "check_list_item")
 class CheckListItem(
         baseEntityId: String,
-        @Column(name = "name")
+        @Column(name = "name", length = 128)
         val name: String,
         @Column(name = "checked")
         val checked: Boolean,

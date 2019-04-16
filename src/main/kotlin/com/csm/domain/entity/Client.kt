@@ -12,8 +12,8 @@ import javax.persistence.Table
 @Table(name = "client")
 class Client(
         baseEntityId: String,
-        @Column(name = "name")
+        @Column(name = "name", length = 36)
         val clientUUID: String,
-        @Column(name = "password")
+        @Column(name = "password", length = 36)
         val clientSecret: String
 ) : BaseEntity(baseEntityId)
