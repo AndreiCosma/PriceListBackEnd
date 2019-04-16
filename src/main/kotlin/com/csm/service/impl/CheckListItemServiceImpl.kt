@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service
 class CheckListItemServiceImpl(
         val checkListItemRepo: CheckListItemRepo
 ) : CheckListItemService {
-    override fun createCheckList(user: User): CheckListItemDTO {
+    override fun createCheckListItem(user: User): CheckListItemDTO {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -22,11 +22,11 @@ class CheckListItemServiceImpl(
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getCheckListItem(id: Long, user: User): CheckListItemDTO {
+    override fun getCheckListItem(id: String, user: User): CheckListItemDTO {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getCheckListItems(checkListId: Long, user: User): List<CheckListItemDTO> {
+    override fun getCheckListItems(checkListId: String, user: User): List<CheckListItemDTO> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -34,7 +34,7 @@ class CheckListItemServiceImpl(
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun deleteCheckListItem(id: Long, user: User) {
+    override fun deleteCheckListItem(id: String, user: User) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

@@ -8,6 +8,6 @@ import java.util.*
 /*
 * Created by I503342 - 20/03/2019
 */
-interface EmailRepo : JpaRepository<Email, Long> {
+interface EmailRepo : JpaRepository<Email, String> {
     fun findByEmailName(emailName: String): Optional<Email>
 }

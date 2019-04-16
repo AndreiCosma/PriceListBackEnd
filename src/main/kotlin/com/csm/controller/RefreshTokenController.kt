@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam
 @RequestMapping(RefreshTokenController.PATH)
 @Api(tags = ["Refresh an access token here."])
 class RefreshTokenController(
-        val refreshTokenService: RefreshTokenService
+        private val refreshTokenService: RefreshTokenService
 ) {
     companion object {
         const val PATH = "/refresh"

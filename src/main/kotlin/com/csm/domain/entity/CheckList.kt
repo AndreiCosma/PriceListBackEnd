@@ -9,7 +9,7 @@ import javax.persistence.*
 @Entity
 @Table(name = "check_list")
 class CheckList(
-        baseEntityId: Long,
+        baseEntityId: String,
         @Column(name = "name")
         val name: String,
         @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "checkList")

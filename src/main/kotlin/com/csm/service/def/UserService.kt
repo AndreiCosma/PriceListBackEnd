@@ -5,7 +5,7 @@ import reactor.core.publisher.Mono
 
 interface UserService {
 
-    fun findById(id: Long): Mono<User>
+    fun findById(id: String): Mono<User>
 
     fun findByUsername(username: String): Mono<User>
 

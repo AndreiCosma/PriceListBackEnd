@@ -38,7 +38,7 @@ class JWTUtilServiceImpl : JWTUtilService {
         val expirationDate = Date(createdDate.time + expirationTime)
 
         return Jwts.builder()
-                .setClaims(mapOf("userId" to "${user.id}"))
+                .setClaims(mapOf("userId" to user.id))
                 .setSubject(user.username)
                 .setIssuedAt(createdDate)
                 .setExpiration(expirationDate)

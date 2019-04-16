@@ -9,7 +9,7 @@ import javax.persistence.*
 @Entity
 @Table(name = "check_list_item")
 class CheckListItem(
-        baseEntityId: Long,
+        baseEntityId: String,
         @Column(name = "name")
         val name: String,
         @Column(name = "checked")

@@ -41,7 +41,7 @@ class ListController(
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Retrieve the requested list for the authenticated user.")
     @GetMapping("/{id}")
-    fun getCheckList(@PathVariable id: Long) = checkListService.getCheckList(id = id, user = authenticationService.getAuthenticatedUser())
+    fun getCheckList(@PathVariable id: String) = checkListService.getCheckList(id = id, user = authenticationService.getAuthenticatedUser())
 
     @ResponseBody
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -53,6 +53,6 @@ class ListController(
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Delete a list by id and authenticated user.")
     @DeleteMapping("/{id}")
-    fun deleteCheckList(@PathVariable id: Long) = checkListService.deleteCheckList(id = id, user = authenticationService.getAuthenticatedUser())
+    fun deleteCheckList(@PathVariable id: String) = checkListService.deleteCheckList(id = id, user = authenticationService.getAuthenticatedUser())
 
 }

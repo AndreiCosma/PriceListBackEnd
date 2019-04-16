@@ -16,7 +16,7 @@ class UserServiceImpl(
         Mono.justOrEmpty(userRepository.findByUsernameU(username))
     }.subscribeOn(jdbcScheduler)
 
-    override fun findById(id: Long) = Mono.defer {
+    override fun findById(id: String) = Mono.defer {
         Mono.justOrEmpty(userRepository.findById(id))
     }.subscribeOn(jdbcScheduler)
 }

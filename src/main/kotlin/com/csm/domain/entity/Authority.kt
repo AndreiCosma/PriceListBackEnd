@@ -6,7 +6,7 @@ import javax.persistence.*
 @Entity
 @Table(name = "authority")
 class Authority(
-        id: Long,
+        id: String,
         @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.DETACH], mappedBy = "userAuthorities")
         private val users: MutableList<User>,
         @Column(name = "name")

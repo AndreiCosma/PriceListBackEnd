@@ -52,7 +52,7 @@ class UserRegistrationServiceImpl(
         //Save users
         val user = userRepo.save(userRegistrationDTO.toUser())
         //Add email to user email list and as primary email
-        user.userEmails.add(Email(baseEntityId = 1L, user = user, emailName = userRegistrationDTO.email, mainEmail = user))
+        user.userEmails.add(Email(baseEntityId = UUID.randomUUID().toString(), user = user, emailName = userRegistrationDTO.email, mainEmail = user))
         //Set initial primary email
         user.setInitialPrimaryEmail()
         //Save changes
@@ -96,7 +96,7 @@ class UserRegistrationServiceImpl(
         try {
             registrationRepo.save(registration.get().completeRegistration())
             val user = registration.get().user
-            user.userAuthorities.add(Authority(users = arrayListOf(user), userAuthority = Authority.ROLE_USER, id = 1L))
+            user.userAuthorities.add(Authority(id = UUID.randomUUID().toString(), users = arrayListOf(user), userAuthority = Authority.ROLE_USER))
             userRepo.save(user.activateUser())
         } catch (e: Exception) {
             //ToDo: Investigate in case of error rollback
@@ -140,7 +140,7 @@ class UserRegistrationServiceImpl(
     )
 
     private fun UserRegistrationDTO.toUser() = User(
-            id = 1L,
+            id = UUID.randomUUID().toString(),
             enabled = false,
             usernameU = this.userName.trim(),
             passwordP = bCryptPasswordEncoder.encode(this.password.trim() + this.userName.trim()),

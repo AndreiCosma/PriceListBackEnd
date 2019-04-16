@@ -8,6 +8,6 @@ import java.util.*
 /*
 * Created by I503342 - 20/03/2019
 */
-interface ClientRepo : JpaRepository<Client, Long> {
+interface ClientRepo : JpaRepository<Client, String> {
     fun findByClientUUID(clientUUID: String): Optional<Client>
 }

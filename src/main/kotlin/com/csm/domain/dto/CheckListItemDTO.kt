@@ -8,9 +8,9 @@ import javax.validation.constraints.NotNull
 */
 class CheckListItemDTO(
         @NotNull
-        val listId: Long,
+        val listId: String,
         @NotNull
-        val id: Long,
+        val id: String,
         val name: String,
         val checked: Boolean
 )

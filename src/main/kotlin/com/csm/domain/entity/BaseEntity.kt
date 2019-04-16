@@ -8,7 +8,6 @@ import javax.persistence.MappedSuperclass
 @MappedSuperclass
 open class BaseEntity(
         @Id
-        @GeneratedValue
         @Column(name = "id")
-        val id: Long
+        val id: String
 )

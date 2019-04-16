@@ -27,7 +27,7 @@ class DevelopController(
     @ApiOperation(value = "Use this to generate new client credentials for further requests.")
     fun registerNewClient(): ClientDTO {
         val clientSecret = UUID.randomUUID().toString()
-        return clientRepo.save(Client(1L, clientUUID = UUID.randomUUID().toString(), clientSecret = bCryptPasswordEncoder.encode(clientSecret))).toDTO(notEncodedPassword = clientSecret)
+        return clientRepo.save(Client(UUID.randomUUID().toString(), clientUUID = UUID.randomUUID().toString(), clientSecret = bCryptPasswordEncoder.encode(clientSecret))).toDTO(notEncodedPassword = clientSecret)
 
     }
 

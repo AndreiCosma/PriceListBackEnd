@@ -10,8 +10,8 @@ import com.csm.domain.entity.User
 interface CheckListService {
     fun createCheckList(user: User): CheckListDTO
     fun saveRemoteCreatedCheckList(checkListDTO: CheckListDTO, user: User)
-    fun getCheckList(id: Long, user: User): CheckListDTO
+    fun getCheckList(id: String, user: User): CheckListDTO
     fun getCheckLists(user: User): List<CheckListDTO>
     fun updateCheckList(checkListDTO: CheckListDTO, user: User)
-    fun deleteCheckList(id: Long, user: User)
+    fun deleteCheckList(id: String, user: User)
 }

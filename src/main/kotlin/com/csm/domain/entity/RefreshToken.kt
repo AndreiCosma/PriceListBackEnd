@@ -10,7 +10,7 @@ import javax.persistence.*
 @Entity
 @Table(name = "refresh_token")
 class RefreshToken(
-        baseEntityId: Long,
+        baseEntityId: String,
         @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.DETACH])
         @JoinColumn(name = "app_user_id")
         val user: User,

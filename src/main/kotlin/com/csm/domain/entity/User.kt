@@ -8,7 +8,7 @@ import springfox.documentation.schema.property.BeanPropertyDefinitions.name
 @Entity(name = "UserEntity")
 @Table(name = "app_user")
 class User(
-        id: Long,
+        id: String,
         @Column(name = "username")
         val usernameU: String,
         @Column(name = "password")

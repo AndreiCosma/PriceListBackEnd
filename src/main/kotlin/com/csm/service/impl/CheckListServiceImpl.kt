@@ -11,6 +11,7 @@ import com.csm.exception.OdataException
 import com.csm.service.def.CheckListService
 import com.csm.service.def.UserService
 import org.springframework.stereotype.Service
+import java.util.*
 
 
 /*
@@ -25,7 +26,7 @@ class CheckListServiceImpl(
     override fun createCheckList(user: User): CheckListDTO {
         //Create List
         val checkList = CheckList(
-                baseEntityId = 1L,
+                baseEntityId = UUID.randomUUID().toString(),
                 name = "New Check List",
                 items = mutableListOf(),
                 users = mutableListOf(user)
@@ -40,7 +41,7 @@ class CheckListServiceImpl(
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getCheckList(id: Long, user: User): CheckListDTO = checkListRepo.findByIdAndUser(id = id, user = user).toDTO()
+    override fun getCheckList(id: String, user: User): CheckListDTO = checkListRepo.findByIdAndUser(id = id, user = user).toDTO()
 
     override fun getCheckLists(user: User): List<CheckListDTO> = checkListRepo.findByUser(user = user).toDTO()
 
@@ -54,7 +55,7 @@ class CheckListServiceImpl(
         checkListRepo.save(checkList)
     }
 
-    override fun deleteCheckList(id: Long, user: User) = checkListRepo.deleteByIdAndUser(id = id, user = user)
+    override fun deleteCheckList(id: String, user: User) = checkListRepo.deleteByIdAndUser(id = id, user = user)
 
     private fun CheckList.toDTO() = CheckListDTO(
             id = this.id,
@@ -62,9 +63,9 @@ class CheckListServiceImpl(
             items = this.items.toDTO(this.id)
     )
 
-    private fun MutableList<CheckListItem>.toDTO(parentId: Long): MutableList<CheckListItemDTO> = this.map { element -> element.toDTO(parentId) }.toMutableList()
+    private fun MutableList<CheckListItem>.toDTO(parentId: String): MutableList<CheckListItemDTO> = this.map { element -> element.toDTO(parentId) }.toMutableList()
 
-    private fun CheckListItem.toDTO(parentId: Long) = CheckListItemDTO(
+    private fun CheckListItem.toDTO(parentId: String) = CheckListItemDTO(
             listId = parentId,
             id = this.id,
             name = this.name,

@@ -9,7 +9,7 @@ import java.util.*
 /*
 * Created by I503342 - 20/03/2019
 */
-interface RefreshTokenRepo : JpaRepository<RefreshToken, Long> {
+interface RefreshTokenRepo : JpaRepository<RefreshToken, String> {
     fun findByRefreshToken(refreshToken: String): Optional<RefreshToken>
 
     @Query("select token from RefreshToken token where date_part('day', age(now(), token.creationDate)) >= 7")
