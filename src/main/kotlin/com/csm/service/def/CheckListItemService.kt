@@ -8,10 +8,9 @@ import com.csm.domain.entity.User
 * Created by I503342 - 21/03/2019
 */
 interface CheckListItemService {
-    fun createCheckListItem(user: User): CheckListItemDTO
-    fun saveRemoteCreatedCheckListItem(checkListItemDTO: CheckListItemDTO, user: User)
-    fun getCheckListItem(id: String, user: User): CheckListItemDTO
-    fun getCheckListItems(checkListId: String, user: User): List<CheckListItemDTO>
-    fun updateCheckListItem(checkListDTO: CheckListItemDTO, user: User)
-    fun deleteCheckListItem(id: String, user: User)
+    fun requestNewItemForParentList(parentId: String, user: User): CheckListItemDTO
+    fun persistItem(checkListItemDTO: CheckListItemDTO, user: User)
+    fun getItem(itemId: String, parentId: String, user: User): CheckListItemDTO
+    fun updateItem(checkListItemDTO: CheckListItemDTO, user: User)
+    fun deleteItem(itemId: String, parentId: String, user: User)
 }
