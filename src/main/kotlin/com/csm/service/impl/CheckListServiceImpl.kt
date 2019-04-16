@@ -6,6 +6,7 @@ import com.csm.domain.entity.CheckList
 import com.csm.domain.entity.CheckListItem
 import com.csm.domain.repo.CheckListRepo
 import com.csm.domain.repo.UserRepo
+import com.csm.exception.OdataException
 import com.csm.service.def.CheckListService
 import com.csm.service.def.UserService
 import org.springframework.stereotype.Service
@@ -22,7 +23,7 @@ class CheckListServiceImpl(
 
     override fun createCheckList(name: String): CheckListDTO {
         //Get user
-        val user = userRepo.findByUsernameU(usernameU = name)
+        val user = userRepo.findByUsernameU(usernameU = name).get()
         //Create List
         val checkList = CheckList(
                 baseEntityId = 1L,
@@ -40,13 +41,13 @@ class CheckListServiceImpl(
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getCheckList(id: Long, name: String): CheckListDTO = checkListRepo.findByIdAndUser(id, userRepo.findByUsernameU(name)).toDTO()
+    override fun getCheckList(id: Long, name: String): CheckListDTO = checkListRepo.findByIdAndUser(id, userRepo.findByUsernameU(name).get()).toDTO()
 
-    override fun getCheckLists(name: String): List<CheckListDTO> = checkListRepo.findByUser(userRepo.findByUsernameU(name)).toDTO()
+    override fun getCheckLists(name: String): List<CheckListDTO> = checkListRepo.findByUser(userRepo.findByUsernameU(name).get()).toDTO()
 
     override fun updateCheckList(checkListDTO: CheckListDTO, name: String) {
         // Get list from database.
-        val checkList = checkListRepo.findByIdAndUser(id = checkListDTO.id, user = userRepo.findByUsernameU(name))
+        val checkList = checkListRepo.findByIdAndUser(id = checkListDTO.id, user = userRepo.findByUsernameU(name).get())
 
         //ToDo: Update only fields that are not null in the DTO
 
@@ -54,7 +55,7 @@ class CheckListServiceImpl(
         checkListRepo.save(checkList)
     }
 
-    override fun deleteCheckList(id: Long, name: String) = checkListRepo.deleteByIdAndUser(id, userRepo.findByUsernameU(name))
+    override fun deleteCheckList(id: Long, name: String) = checkListRepo.deleteByIdAndUser(id, userRepo.findByUsernameU(name).get())
 
     private fun CheckList.toDTO() = CheckListDTO(
             id = this.id,
@@ -71,6 +72,6 @@ class CheckListServiceImpl(
             checked = this.checked
     )
 
-    private fun List<CheckList>.toDTO() = this.map { element -> element.toDTO() }
+     fun List<CheckList>.toDTO() = this.map { element -> element.toDTO() }
 
 }
