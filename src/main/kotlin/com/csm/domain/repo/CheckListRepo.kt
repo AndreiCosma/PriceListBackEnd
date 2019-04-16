@@ -18,7 +18,7 @@ interface CheckListRepo : JpaRepository<CheckList, Long> {
     @Query("select r from CheckList r where :user MEMBER OF r.users")
     fun findByUser(@Param("user") user: User): List<CheckList>
 
-    @Query("delete r from CheckList r where r.id = :id and :user MEMBER OF r.users")
+    @Query("delete from CheckList r where r.id = :id and :user MEMBER OF r.users")
     fun deleteByIdAndUser(@Param("id") id: Long, @Param("user") user: User)
 
 }
