@@ -16,10 +16,10 @@ class PriceListBackEndApp(
         val authorityService: AuthorityService,
         val clientService: ClientService
 ) : CommandLineRunner {
-    override fun run(vararg args: String?) {
+    override fun run(vararg args: String) {
         authorityService.init()
         if (args.size >= 2) {
-            clientService.init(clientName = args[0]!!, clientSecret = args[1]!!)
+            clientService.init(clientName = args[0], clientSecret = args[1])
         }
     }
 

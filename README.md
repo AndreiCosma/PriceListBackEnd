@@ -16,7 +16,7 @@
 
 ## Flow 
 
-+ Register a new client. (On local environment only) path = /develop/client, method = get, responseBody= ClientDTO 
++ Register a new client by giving the client UUID name and UUID secret as first and second run param. (Alternative on local profile: path = /develop/client, method = get, responseBody= ClientDTO)
 + Register a new user. path=/register, method = post requestBody = UserRegistrationDTO
 + Activate the user using the UUID sent on email. path = /register method = get, requestParams = code:String
 + Get JWT. path = /login, method = post, requestBody = UserLoginRequestDTO, responseBody = TokenDTO
