@@ -7,13 +7,14 @@ import io.swagger.annotations.ApiOperation
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Mono
+import reactor.core.publisher.toMono
 
 
 /*
 * Created by I503342 - 18/03/2019
 */
 @RestController
-@RequestMapping(name = LoginController.PATH)
+@RequestMapping(path = [LoginController.PATH])
 @Api(tags = ["Access, Refresh token endpoint used to get tokens."])
 class LoginController(val userLoginService: UserLoginService) {
     companion object {
@@ -24,5 +25,5 @@ class LoginController(val userLoginService: UserLoginService) {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Use credentials to get access token and refresh token.")
-    fun login(@RequestBody userLoginRequestDTO: UserLoginRequestDTO) = Mono.just(userLoginService.loginUser(userLoginRequestDTO))
+    fun login(@RequestBody userLoginRequestDTO: UserLoginRequestDTO) = userLoginService.loginUser(userLoginRequestDTO).toMono()
 }

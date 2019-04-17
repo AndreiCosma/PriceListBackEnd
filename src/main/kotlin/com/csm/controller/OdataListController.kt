@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*
 * Created by I503342 - 20/03/2019
 */
 
-@RequestMapping(OdataListController.PATH)
+@RequestMapping(path = [OdataListController.PATH])
 @RestController
 @Api(tags = ["Lists, oData v.4 end-point."])
 class OdataListController {

@@ -37,11 +37,9 @@ class SecurityConfig(
             .pathMatchers("/register").permitAll()
             .pathMatchers("/refresh").permitAll()
             .pathMatchers("/api/v1/odata/v4/NOTES").permitAll()
-            .pathMatchers("/api/v1/list").permitAll()
-            .pathMatchers("/api/v1/item").permitAll()
+            .pathMatchers("/api/v1/**").authenticated()
             .pathMatchers("/develop/client").permitAll()
             .pathMatchers("/login", "/v2/api-docs", "/configuration/ui", "/swagger-resources/**", "/configuration/**", "/swagger-ui.html", "/webjars/**").permitAll()
-            .anyExchange().authenticated()
             .and().build()
 
     @Bean

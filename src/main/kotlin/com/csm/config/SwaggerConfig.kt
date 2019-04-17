@@ -20,7 +20,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux
 class SwaggerConfig : WebFluxConfigurationSupport() {
 
     @Bean
-    fun api() = Docket(DocumentationType.SWAGGER_2)
+    fun api(): Docket = Docket(DocumentationType.SWAGGER_2)
             .produces(setOf("application/json"))
             .consumes(setOf("application/json"))
             .securityContexts(listOf(

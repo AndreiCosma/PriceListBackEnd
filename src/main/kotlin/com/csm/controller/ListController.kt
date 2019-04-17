@@ -7,13 +7,14 @@ import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
+import reactor.core.publisher.toMono
 
 
 /*
 * Created by I503342 - 01/04/2019
 */
 
-@RequestMapping(ListController.PATH)
+@RequestMapping(path = [ListController.PATH])
 @RestController
 @Api(tags = ["List, end-point."])
 class ListController(
@@ -28,7 +29,7 @@ class ListController(
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Request the server to create a list for you.")
     @GetMapping
-    fun newCheckList() = checkListService.createCheckList(user = authenticationService.getAuthenticatedUser())
+    fun newCheckList() = checkListService.createCheckList(user = authenticationService.getAuthenticatedUser()).toMono()
 
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
@@ -39,7 +40,7 @@ class ListController(
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Retrieve the requested list for the authenticated user.")
-    @GetMapping("/{id}")
+    @GetMapping(path = ["/l/{id}"])
     fun getCheckList(@PathVariable id: String) = checkListService.getCheckList(id = id, user = authenticationService.getAuthenticatedUser())
 
     @ResponseBody
@@ -51,7 +52,7 @@ class ListController(
     @ResponseBody
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Delete a list by id and authenticated user.")
-    @DeleteMapping("/{id}")
+    @DeleteMapping(path = ["/l/{id}"])
     fun deleteCheckList(@PathVariable id: String) = checkListService.deleteCheckList(id = id, user = authenticationService.getAuthenticatedUser())
 
 }

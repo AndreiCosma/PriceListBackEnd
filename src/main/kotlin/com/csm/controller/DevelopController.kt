@@ -7,13 +7,15 @@ import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.bind.annotation.*
+import reactor.core.publisher.Mono
+import reactor.core.publisher.toMono
 import java.util.*
 
 /*
 * Created by I503342 - 21/03/2019
 */
 @RestController
-@RequestMapping(DevelopController.PATH)
+@RequestMapping(path = [DevelopController.PATH])
 @Api(tags = ["This controller contains development tools."])
 class DevelopController(
         val bCryptPasswordEncoder: BCryptPasswordEncoder,
@@ -23,11 +25,11 @@ class DevelopController(
         const val PATH = "/develop"
     }
 
-    @GetMapping("/client")
+    @GetMapping(path = ["/client"])
     @ApiOperation(value = "Use this to generate new client credentials for further requests.")
-    fun registerNewClient(): ClientDTO {
+    fun registerNewClient(): Mono<ClientDTO> {
         val clientSecret = UUID.randomUUID().toString()
-        return clientRepo.save(Client(UUID.randomUUID().toString(), clientUUID = UUID.randomUUID().toString(), clientSecret = bCryptPasswordEncoder.encode(clientSecret))).toDTO(notEncodedPassword = clientSecret)
+        return clientRepo.save(Client(UUID.randomUUID().toString(), clientUUID = UUID.randomUUID().toString(), clientSecret = bCryptPasswordEncoder.encode(clientSecret))).toDTO(notEncodedPassword = clientSecret).toMono()
 
     }
 
