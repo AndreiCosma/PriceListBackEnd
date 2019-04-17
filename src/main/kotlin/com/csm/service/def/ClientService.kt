@@ -6,5 +6,7 @@ package com.csm.service.def
 */
 
 interface ClientService {
+    fun init(clientName: String, clientSecret: String)
     fun checkClient(clientName: String, clientSecret: String)
+    fun registerClient(clientName: String, clientSecret: String)
 }

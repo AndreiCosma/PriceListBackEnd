@@ -5,6 +5,7 @@ import com.csm.domain.entity.Client
 import com.csm.domain.repo.ClientRepo
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
+import org.springframework.context.annotation.Profile
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Mono
@@ -17,6 +18,7 @@ import java.util.*
 @RestController
 @RequestMapping(path = [DevelopController.PATH])
 @Api(tags = ["This controller contains development tools."])
+@Profile(value = ["local"])
 class DevelopController(
         val bCryptPasswordEncoder: BCryptPasswordEncoder,
         val clientRepo: ClientRepo

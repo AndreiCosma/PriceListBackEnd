@@ -11,6 +11,8 @@ class CheckListItemDTO(
         val listId: String,
         @NotNull
         val id: String,
+        @NotNull
         val name: String,
+        @NotNull
         val checked: Boolean
 )

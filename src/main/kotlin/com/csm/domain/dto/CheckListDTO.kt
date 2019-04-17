@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull
 class CheckListDTO(
         @NotNull
         val id: String,
+        @NotNull
         val name: String,
         val items: MutableList<CheckListItemDTO>
 )
