@@ -9,8 +9,8 @@ import com.csm.domain.entity.User
 */
 interface CheckListItemService {
     fun requestNewItemForParentList(parentId: String, user: User): CheckListItemDTO
-    fun persistItem(checkListItemDTO: CheckListItemDTO, user: User)
-    fun getItem(itemId: String, parentId: String, user: User): CheckListItemDTO
+    fun persistRemoteItem(checkListItemDTO: CheckListItemDTO, user: User)
+    fun getItem(itemId: String, user: User): CheckListItemDTO
     fun updateItem(checkListItemDTO: CheckListItemDTO, user: User)
     fun deleteItem(itemId: String, parentId: String, user: User)
 }

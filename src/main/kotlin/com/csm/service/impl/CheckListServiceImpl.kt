@@ -76,9 +76,9 @@ class CheckListServiceImpl(
             checked = this.checked
     )
 
-    fun List<CheckList>.toDTO() = this.map { element -> element.toDTO() }
+    private fun List<CheckList>.toDTO() = this.map { element -> element.toDTO() }
 
-    fun CheckListDTO.toPersistable(user: User) = CheckList(
+    private fun CheckListDTO.toPersistable(user: User) = CheckList(
             baseEntityId = this.id,
             name = this.name,
             items = mutableListOf(),
@@ -86,9 +86,9 @@ class CheckListServiceImpl(
             users = mutableListOf(user)
     )
 
-    fun MutableList<CheckListItemDTO>.toPersistable(parent: CheckList) = this.map { item -> item.toPersistable(parent) }.toMutableList()
+    private fun MutableList<CheckListItemDTO>.toPersistable(parent: CheckList) = this.map { item -> item.toPersistable(parent) }.toMutableList()
 
-    fun CheckListItemDTO.toPersistable(parent: CheckList) = CheckListItem(
+    private fun CheckListItemDTO.toPersistable(parent: CheckList) = CheckListItem(
             baseEntityId = UUID.randomUUID().toString(),
             name = this.name,
             checked = this.checked,

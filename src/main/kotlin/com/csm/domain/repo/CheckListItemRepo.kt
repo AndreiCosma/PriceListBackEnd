@@ -13,10 +13,10 @@ import org.springframework.data.repository.query.Param
 */
 interface CheckListItemRepo : JpaRepository<CheckListItem, String> {
     @Query("select r from CheckListItem r where r.id = :id and :user MEMBER OF r.checkList.users")
-    fun findByIdAndUser(@Param("id") id: String, @Param("user") user: User): CheckList
+    fun findByIdAndUser(@Param("id") id: String, @Param("user") user: User): CheckListItem
 
     @Query("select r from CheckListItem r where :user MEMBER OF r.checkList.users")
-    fun findByUser(@Param("user") user: User): List<CheckList>
+    fun findByUser(@Param("user") user: User): List<CheckListItem>
 
     @Query("delete from CheckListItem r where r.id = :id and :user MEMBER OF r.checkList.users")
     fun deleteByIdAndUser(@Param("id") id: String, @Param("user") user: User)
