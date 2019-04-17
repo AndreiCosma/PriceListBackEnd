@@ -9,10 +9,10 @@ import com.csm.domain.repo.EmailRepo
 import com.csm.domain.repo.RegistrationRepo
 import com.csm.domain.repo.UserRepo
 import com.csm.exception.user.UserRegistrationException
+import com.csm.service.def.AuthorityService
 import com.csm.service.def.ClientService
 import com.csm.service.def.UserRegistrationService
 import org.slf4j.LoggerFactory
-import org.springframework.mail.MailException
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -21,6 +21,7 @@ import java.util.*
 import javax.mail.internet.AddressException
 import javax.mail.internet.InternetAddress
 import javax.transaction.Transactional
+import org.springframework.mail.MailException as MailException1
 
 @Service
 class UserRegistrationServiceImpl(
@@ -29,7 +30,8 @@ class UserRegistrationServiceImpl(
         val registrationRepo: RegistrationRepo,
         val bCryptPasswordEncoder: BCryptPasswordEncoder,
         val javaMailSender: JavaMailSender,
-        val emailRepo: EmailRepo
+        val emailRepo: EmailRepo,
+        val authorityService: AuthorityService
 ) : UserRegistrationService {
     private val logger = LoggerFactory.getLogger(this.javaClass)
 
@@ -74,7 +76,7 @@ class UserRegistrationServiceImpl(
         simpleMailMessage.setTo(userRegistrationDTO.email)
         try {
             javaMailSender.send(simpleMailMessage)
-        } catch (e: MailException) {
+        } catch (e: MailException1) {
             //ToDO: Investigate jpa error on delete if email send fails
             //Delete users if emailName fails.
             logger.error("Email error ---> $e")
@@ -96,7 +98,7 @@ class UserRegistrationServiceImpl(
         try {
             registrationRepo.save(registration.get().completeRegistration())
             val user = registration.get().user
-            user.userAuthorities.add(Authority(id = UUID.randomUUID().toString(), users = arrayListOf(user), userAuthority = Authority.ROLE_USER))
+            user.userAuthorities.add(authorityService.getAuthority(authority = Authority.ROLE_USER))
             userRepo.save(user.activateUser())
         } catch (e: Exception) {
             //ToDo: Investigate in case of error rollback
