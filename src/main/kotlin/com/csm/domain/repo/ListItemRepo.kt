@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param
 /*
 * Created by I503342 - 21/03/2019
 */
-interface CheckListItemRepo : JpaRepository<CheckListItem, String> {
+interface ListItemRepo : JpaRepository<CheckListItem, String> {
     @Query("select r from CheckListItem r where r.id = :id and :user MEMBER OF r.checkList.users")
     fun findByIdAndUser(@Param("id") id: String, @Param("user") user: User): CheckListItem
 

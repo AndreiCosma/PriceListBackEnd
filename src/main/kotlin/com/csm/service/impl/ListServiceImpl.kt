@@ -5,11 +5,8 @@ import com.csm.domain.dto.CheckListItemDTO
 import com.csm.domain.entity.CheckList
 import com.csm.domain.entity.CheckListItem
 import com.csm.domain.entity.User
-import com.csm.domain.repo.CheckListRepo
-import com.csm.domain.repo.UserRepo
-import com.csm.exception.OdataException
-import com.csm.service.def.CheckListService
-import com.csm.service.def.UserService
+import com.csm.domain.repo.ListRepo
+import com.csm.service.def.ListService
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -18,9 +15,9 @@ import java.util.*
 * Created by I503342 - 21/03/2019
 */
 @Service
-class CheckListServiceImpl(
-        val checkListRepo: CheckListRepo
-) : CheckListService {
+class ListServiceImpl(
+        val checkListRepo: ListRepo
+) : ListService {
 
     override fun createCheckList(user: User): CheckListDTO {
         //Create List

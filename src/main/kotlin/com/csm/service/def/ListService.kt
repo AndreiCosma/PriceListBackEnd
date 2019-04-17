@@ -7,7 +7,7 @@ import com.csm.domain.entity.User
 /*
 * Created by I503342 - 21/03/2019
 */
-interface CheckListService {
+interface ListService {
     fun createCheckList(user: User): CheckListDTO
     fun saveRemoteCreatedCheckList(checkListDTO: CheckListDTO, user: User)
     fun getCheckList(id: String, user: User): CheckListDTO

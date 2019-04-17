@@ -7,7 +7,7 @@ import com.csm.domain.entity.User
 /*
 * Created by I503342 - 21/03/2019
 */
-interface CheckListItemService {
+interface ListItemService {
     fun requestNewItemForParentList(parentId: String, user: User): CheckListItemDTO
     fun persistRemoteItem(checkListItemDTO: CheckListItemDTO, user: User)
     fun getItem(itemId: String, user: User): CheckListItemDTO

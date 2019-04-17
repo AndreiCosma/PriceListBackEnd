@@ -2,12 +2,11 @@ package com.csm.controller
 
 import com.csm.domain.dto.CheckListDTO
 import com.csm.service.def.AuthenticationService
-import com.csm.service.def.CheckListService
+import com.csm.service.def.ListService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
-import java.security.Principal
 
 
 /*
@@ -16,9 +15,9 @@ import java.security.Principal
 
 @RequestMapping(ListController.PATH)
 @RestController
-@Api(tags = ["Lists, end-point."])
+@Api(tags = ["List, end-point."])
 class ListController(
-        val checkListService: CheckListService,
+        val checkListService: ListService,
         val authenticationService: AuthenticationService
 ) {
     companion object {
