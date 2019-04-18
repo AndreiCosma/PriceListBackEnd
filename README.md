@@ -6,7 +6,7 @@
 + Install PostgreSQL from https://www.postgresql.org/
 + Install Maven from https://maven.apache.org/
 
-## Setup 
+## Setup local
 
 + Configure PostgreSQL database with the configuration found in application.yml file.
 
