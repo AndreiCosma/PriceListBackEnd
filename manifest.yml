@@ -2,7 +2,7 @@ applications:
 
 - name: checklistbackend
   memory: 768M
-  path: target/somejar.jar
+  path: target/pricelistbackend-0.0.1-SNAPSHOT.jar
   buildpack: java_buildpack
   env:
     TARGET_RUNTIME: main

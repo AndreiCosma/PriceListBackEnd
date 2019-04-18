@@ -41,7 +41,7 @@ class ClientServiceImpl(
     }
 
     override fun init(clientName: String, clientSecret: String) {
-        if (clientRepo.findByClientUUID(clientUUID = clientName).isEmpty) {
+        if (!clientRepo.findByClientUUID(clientUUID = clientName).isPresent) {
             registerClient(clientName = clientName, clientSecret = clientSecret)
         }
     }
