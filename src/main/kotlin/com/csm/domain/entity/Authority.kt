@@ -6,12 +6,11 @@ import javax.persistence.*
 @Entity
 @Table(name = "authority")
 class Authority(
-        id: String,
         @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.DETACH], mappedBy = "userAuthorities")
         private val users: MutableList<User>,
         @Column(name = "name", length = 128)
         private val userAuthority: String
-) : BaseEntity(id), GrantedAuthority {
+) : BaseEntity(), GrantedAuthority {
     companion object {
         const val ROLE_USER = "ROLE_USER"
         const val ROLE_ADMIN = "ROLE_ADMIN"

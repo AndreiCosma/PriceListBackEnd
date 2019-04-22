@@ -8,47 +8,47 @@ import springfox.documentation.schema.property.BeanPropertyDefinitions.name
 @Entity(name = "UserEntity")
 @Table(name = "app_user")
 class User(
-        id: String,
         @Column(name = "username", length = 128)
-        val usernameU: String,
+        var usernameU: String,
         @Column(name = "password", length = 256)
-        val passwordP: String,
+        var passwordP: String,
         @Column(name = "enabled")
-        val enabled: Boolean,
+        var enabled: Boolean,
         @Column(name = "credentials_non_expired")
-        val credentialsNonExpired: Boolean,
+        var credentialsNonExpired: Boolean,
         @Column(name = "account_non_expired")
-        val accountNonExpired: Boolean,
+        var accountNonExpired: Boolean,
         @Column(name = "account_non_locked")
-        val accountNonLocked: Boolean,
+        var accountNonLocked: Boolean,
         @Column(name = "requires_two_factor")
-        val requiresTwoFactor: Boolean,
+        var requiresTwoFactor: Boolean,
         @ManyToMany(cascade = [CascadeType.DETACH, CascadeType.PERSIST], fetch = FetchType.EAGER)
         @JoinTable(
                 name = "app_user_link_authority",
                 joinColumns = [JoinColumn(name = "app_user_id")],
                 inverseJoinColumns = [JoinColumn(name = "authority_id")]
         )
-        val userAuthorities: MutableList<Authority>,
+        var userAuthorities: MutableList<Authority>,
         @ManyToMany(cascade = [CascadeType.DETACH, CascadeType.PERSIST], fetch = FetchType.LAZY)
         @JoinTable(
                 name = "check_list_link_app_user",
                 joinColumns = [JoinColumn(name = "app_user_id")],
                 inverseJoinColumns = [JoinColumn(name = "check_list_id")]
         )
-        val lists: MutableList<CheckList>,
+        var lists: MutableList<CheckList>,
         @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "owner")
-        val ownedLists: MutableList<CheckList>,
+        var ownedLists: MutableList<CheckList>,
         @OneToMany(cascade = [CascadeType.DETACH, CascadeType.PERSIST], orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "user")
-        val userRefreshTokens: MutableList<RefreshToken>,
+        var userRefreshTokens: MutableList<RefreshToken>,
         @OneToMany(cascade = [CascadeType.DETACH, CascadeType.PERSIST], orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "user")
-        val userEmails: MutableList<Email>,
-        @OneToOne(cascade = [CascadeType.DETACH, CascadeType.PERSIST], orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "user")
-        val registration: Registration?,
-        @OneToOne(optional = false)
+        var userEmails: MutableList<Email>,
+        @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY, optional = true)
+        @JoinColumn(name = "registration")
+        var registration: Registration?,
+        @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY, optional = true)
         @JoinColumn(name = "main_email")
-        val mainEmail: Email?
-) : BaseEntity(id), UserDetails {
+        var mainEmail: Email?
+) : BaseEntity(), UserDetails {
 
     override fun getAuthorities() = userAuthorities
 

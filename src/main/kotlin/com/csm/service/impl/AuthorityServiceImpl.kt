@@ -17,16 +17,15 @@ class AuthorityServiceImpl(
 ) : AuthorityService {
     override fun init() {
         if (!authorityRepo.findByUserAuthority(Authority.ROLE_USER).isPresent) {
-            authorityRepo.save(Authority(id = UUID.randomUUID().toString(), users = mutableListOf(), userAuthority = Authority.ROLE_USER))
+            authorityRepo.save(Authority(users = mutableListOf(), userAuthority = Authority.ROLE_USER))
         }
         if (!authorityRepo.findByUserAuthority(Authority.ROLE_ADMIN).isPresent) {
-            authorityRepo.save(Authority(id = UUID.randomUUID().toString(), users = mutableListOf(), userAuthority = Authority.ROLE_ADMIN))
+            authorityRepo.save(Authority(users = mutableListOf(), userAuthority = Authority.ROLE_ADMIN))
         }
         if (!authorityRepo.findByUserAuthority(Authority.ROLE_DEVELOPER).isPresent) {
-            authorityRepo.save(Authority(id = UUID.randomUUID().toString(), users = mutableListOf(), userAuthority = Authority.ROLE_DEVELOPER))
+            authorityRepo.save(Authority(users = mutableListOf(), userAuthority = Authority.ROLE_DEVELOPER))
         }
     }
 
     override fun getAuthority(authority: String) = authorityRepo.findByUserAuthority(authority).get()
-            ?: throw AuthorityNotFoundException("$authority not found.")
 }

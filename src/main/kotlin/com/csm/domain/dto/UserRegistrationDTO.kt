@@ -24,7 +24,7 @@ data class UserRegistrationDTO(
         val passwordConfirmation: String,
         @NotNull
         @NotBlank
-        val clientUUID: String,
+        val clientName: String,
         @NotNull
         @NotBlank
         val clientSecret: String

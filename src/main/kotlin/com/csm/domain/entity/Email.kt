@@ -9,12 +9,11 @@ import javax.persistence.*
 @Entity
 @Table(name = "email")
 class Email(
-        baseEntityId: String,
-        @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.DETACH])
+        @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.DETACH, CascadeType.PERSIST], optional = false)
         @JoinColumn(name = "app_user_id")
         val user: User,
         @Column(name = "name", length = 128)
         val emailName: String,
-        @OneToOne(mappedBy = "mainEmail", cascade = [CascadeType.DETACH], optional = false)
+        @OneToOne(mappedBy = "mainEmail", cascade = [CascadeType.DETACH, CascadeType.PERSIST], optional = false)
         val mainEmail: User
-) : BaseEntity(baseEntityId)
+) : BaseEntity()

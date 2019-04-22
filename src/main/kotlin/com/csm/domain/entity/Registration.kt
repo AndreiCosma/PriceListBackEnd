@@ -10,14 +10,12 @@ import javax.persistence.*
 @Entity
 @Table(name = "registration")
 class Registration(
-        id: String,
-        @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.DETACH, CascadeType.PERSIST])
-        @JoinColumn(name = "app_user_id")
+        @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.DETACH, CascadeType.PERSIST], mappedBy = "registration", optional = false)
         val user: User,
         @Column(name = "registration_date")
-        val registrationDate: Date,
+        var registrationDate: Date,
         @Column(name = "activation_date")
-        private val activationDate: Date,
+        var activationDate: Date,
         @Column(name = "active")
-        val active: Boolean
-) : BaseEntity(id)
+        var active: Boolean
+) : BaseEntity()

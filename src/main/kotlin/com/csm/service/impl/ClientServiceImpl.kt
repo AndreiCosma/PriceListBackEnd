@@ -37,7 +37,7 @@ class ClientServiceImpl(
     }
 
     override fun registerClient(clientName: String, clientSecret: String) {
-        clientRepo.save(Client(baseEntityId = UUID.randomUUID().toString(), clientUUID = clientName, clientSecret = bCryptPasswordEncoder.encode(clientSecret)))
+        clientRepo.save(Client(clientUUID = clientName, clientSecret = bCryptPasswordEncoder.encode(clientSecret)))
     }
 
     override fun init(clientName: String, clientSecret: String) {

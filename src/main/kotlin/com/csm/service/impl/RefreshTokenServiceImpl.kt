@@ -32,11 +32,9 @@ class RefreshTokenServiceImpl(
         return TokenDTO(accessToken = jwtUtil.generateToken(refreshTokenOptional.get().user), refreshToken = refreshToken.refreshToken)
     }
 
-    private fun RefreshToken.refresh() = RefreshToken(
-            baseEntityId = this.id,
-            user = this.user,
-            refreshToken = UUID.randomUUID().toString(),
-            deviceUUID = this.deviceUUID,
-            creationDate = Date()
-    )
+    private fun RefreshToken.refresh() = this.run {
+        refreshToken = UUID.randomUUID().toString()
+        creationDate = Date()
+        this
+    }
 }

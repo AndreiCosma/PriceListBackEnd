@@ -22,7 +22,7 @@ class ListServiceImpl(
     override fun createCheckList(user: User): CheckListDTO {
         //Create List
         val checkList = CheckList(
-                baseEntityId = UUID.randomUUID().toString(),
+                id = UUID.randomUUID().toString(),
                 name = "New Check List",
                 items = mutableListOf(),
                 owner = user,
@@ -76,7 +76,7 @@ class ListServiceImpl(
     private fun List<CheckList>.toDTO() = this.map { element -> element.toDTO() }
 
     private fun CheckListDTO.toPersistable(user: User) = CheckList(
-            baseEntityId = this.id,
+            id = this.id,
             name = this.name,
             items = mutableListOf(),
             owner = user,
@@ -86,7 +86,7 @@ class ListServiceImpl(
     private fun MutableList<CheckListItemDTO>.toPersistable(parent: CheckList) = this.map { item -> item.toPersistable(parent) }.toMutableList()
 
     private fun CheckListItemDTO.toPersistable(parent: CheckList) = CheckListItem(
-            baseEntityId = UUID.randomUUID().toString(),
+            id = UUID.randomUUID().toString(),
             name = this.name,
             checked = this.checked,
             checkList = parent

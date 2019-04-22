@@ -18,7 +18,7 @@ import java.util.*
 @RestController
 @RequestMapping(path = [DevelopController.PATH])
 @Api(tags = ["This controller contains development tools."])
-@Profile(value = ["local"])
+//@Profile(value = ["local"])
 class DevelopController(
         val bCryptPasswordEncoder: BCryptPasswordEncoder,
         val clientRepo: ClientRepo
@@ -31,7 +31,7 @@ class DevelopController(
     @ApiOperation(value = "Use this to generate new client credentials for further requests.")
     fun registerNewClient(): Mono<ClientDTO> {
         val clientSecret = UUID.randomUUID().toString()
-        return clientRepo.save(Client(UUID.randomUUID().toString(), clientUUID = UUID.randomUUID().toString(), clientSecret = bCryptPasswordEncoder.encode(clientSecret))).toDTO(notEncodedPassword = clientSecret).toMono()
+        return clientRepo.save(Client(clientUUID = UUID.randomUUID().toString(), clientSecret = bCryptPasswordEncoder.encode(clientSecret))).toDTO(notEncodedPassword = clientSecret).toMono()
 
     }
 

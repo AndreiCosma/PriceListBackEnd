@@ -10,14 +10,13 @@ import javax.persistence.*
 @Entity
 @Table(name = "refresh_token")
 class RefreshToken(
-        baseEntityId: String,
         @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.DETACH])
         @JoinColumn(name = "app_user_id")
-        val user: User,
+        var user: User,
         @Column(name = "token", length = 36)
-        val refreshToken: String,
+        var refreshToken: String,
         @Column(name = "device_uuid", length = 36)
-        val deviceUUID: String,
+        var deviceUUID: String,
         @Column(name = "creation_date")
-        val creationDate: Date
-) : BaseEntity(baseEntityId)
+        var creationDate: Date
+) : BaseEntity()

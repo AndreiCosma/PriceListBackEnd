@@ -9,7 +9,7 @@ import javax.persistence.*
 @Entity
 @Table(name = "check_list")
 class CheckList(
-        baseEntityId: String,
+        id: String,
         @Column(name = "name", length = 128)
         val name: String,
         @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "checkList")
@@ -19,4 +19,4 @@ class CheckList(
         val owner: User,
         @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.DETACH], mappedBy = "lists")
         val users: MutableList<User>
-) : BaseEntity(baseEntityId)
+) : BaseEntity(id)

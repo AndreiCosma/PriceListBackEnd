@@ -9,12 +9,12 @@ import javax.persistence.*
 @Entity
 @Table(name = "check_list_item")
 class CheckListItem(
-        baseEntityId: String,
+        id: String,
         @Column(name = "name", length = 128)
-        val name: String,
+        var name: String,
         @Column(name = "checked")
-        val checked: Boolean,
+        var checked: Boolean,
         @ManyToOne(cascade = [CascadeType.DETACH])
         @JoinColumn(name = "check_list_id")
-        val checkList: CheckList
-) : BaseEntity(baseEntityId)
+        var checkList: CheckList
+) : BaseEntity(id)

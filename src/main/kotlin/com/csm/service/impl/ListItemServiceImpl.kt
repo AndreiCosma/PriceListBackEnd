@@ -20,19 +20,16 @@ class ListItemServiceImpl(
         val checkListItemRepo: ListItemRepo,
         val checkListRepo: ListRepo
 ) : ListItemService {
-    override fun requestNewItemForParentList(parentId: String, user: User) = checkListItemRepo.save(CheckListItem(baseEntityId = UUID.randomUUID().toString(), name = "New Item", checked = false, checkList = checkListRepo.findByIdAndUser(id = parentId, user = user)
-            ?: throw ListNotFoundException("No List found."))).toDTO()
+    override fun requestNewItemForParentList(parentId: String, user: User) = checkListItemRepo.save(CheckListItem(id = UUID.randomUUID().toString(), name = "New Item", checked = false, checkList = checkListRepo.findByIdAndUser(id = parentId, user = user))).toDTO()
 
     override fun persistRemoteItem(checkListItemDTO: CheckListItemDTO, user: User) {
-        checkListItemRepo.save(checkListItemDTO.toPersistable(checkListRepo.findByIdAndUser(id = checkListItemDTO.listId, user = user))
-                ?: throw ListNotFoundException("List not found."))
+        checkListItemRepo.save(checkListItemDTO.toPersistable(checkListRepo.findByIdAndUser(id = checkListItemDTO.listId, user = user)))
     }
 
     override fun getItem(itemId: String, user: User) = checkListItemRepo.findByIdAndUser(id = itemId, user = user).toDTO()
 
     override fun updateItem(checkListItemDTO: CheckListItemDTO, user: User) {
-        (checkListItemRepo.findByIdAndUser(id = checkListItemDTO.id, user = user)
-                ?: throw ListNotFoundException("List not found.")).update(checkListItemDTO)
+        (checkListItemRepo.findByIdAndUser(id = checkListItemDTO.id, user = user)).update(checkListItemDTO)
 
     }
 
@@ -48,16 +45,16 @@ class ListItemServiceImpl(
     )
 
     fun CheckListItemDTO.toPersistable(parent: CheckList) = CheckListItem(
-            baseEntityId = UUID.randomUUID().toString(),
+            id = UUID.randomUUID().toString(),
             name = this.name,
             checked = this.checked,
             checkList = parent
     )
 
-    fun CheckListItem.update(dto: CheckListItemDTO) = CheckListItem(
-            baseEntityId = this.id,
-            name = dto.name,
-            checked = dto.checked,
-            checkList = this.checkList
-    )
+    fun CheckListItem.update(dto: CheckListItemDTO) = this.run {
+        name = dto.name
+        checked = dto.checked
+        checkList = this.checkList
+        this
+    }
 }

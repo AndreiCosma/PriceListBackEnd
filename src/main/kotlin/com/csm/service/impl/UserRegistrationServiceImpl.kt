@@ -38,9 +38,11 @@ class UserRegistrationServiceImpl(
     @Transactional
     override fun registerNewUser(userRegistrationDTO: UserRegistrationDTO) {
 
-        clientService.checkClient(userRegistrationDTO.clientUUID, userRegistrationDTO.clientSecret)
-        //Check users registration correctness
-        userRegistrationDTO.isUserOk()
+        clientService.checkClient(userRegistrationDTO.clientName, userRegistrationDTO.clientSecret)
+        //Check password
+        if (userRegistrationDTO.password != userRegistrationDTO.passwordConfirmation) {
+            throw UserRegistrationException("Password does not match.")
+        }
         //Check if users exists.
         if (userRepo.findByUsernameU(userRegistrationDTO.userName).isPresent) {
             throw UserRegistrationException("Username already exists.")
@@ -51,28 +53,27 @@ class UserRegistrationServiceImpl(
             throw UserRegistrationException("Email already exists.")
         }
 
-        //Save users
-        val user = userRepo.save(userRegistrationDTO.toUser())
-        //Add email to user email list and as primary email
-        user.userEmails.add(Email(baseEntityId = UUID.randomUUID().toString(), user = user, emailName = userRegistrationDTO.email, mainEmail = user))
-        //Set initial primary email
-        user.setInitialPrimaryEmail()
-        //Save changes
-        userRepo.save(user)
+        val savedUser = userRepo.save(userRegistrationDTO.toUser())
 
-        val registration = registrationRepo.save(Registration(
-                id = UUID.randomUUID().toString(),
-                user = user,
+        val registration = Registration(
+                user = savedUser,
                 registrationDate = Date(),
                 activationDate = Date(),
                 active = false
-        ))
+        )
+
+        val email = Email(
+                user = savedUser,
+                emailName = userRegistrationDTO.email,
+                mainEmail = savedUser
+        )
+        savedUser.addRegistrationAndEmail(registration, email)
 
         //Send confirmation emailName.
         val simpleMailMessage = SimpleMailMessage()
         simpleMailMessage.setSubject("Price List account verification")
         simpleMailMessage.setText("Account verification link: http://localhost:8080/register?code=${registration.id}\n " +
-                "If you did not registered ignore this emailName. \n Do not reply to this emailName.")
+                "If you did not registered ignore this email, ignore this. \n Do not reply to this emailName.")
         simpleMailMessage.setTo(userRegistrationDTO.email)
         try {
             javaMailSender.send(simpleMailMessage)
@@ -80,8 +81,7 @@ class UserRegistrationServiceImpl(
             //ToDO: Investigate jpa error on delete if email send fails
             //Delete users if emailName fails.
             logger.error("Email error ---> $e")
-            userRepo.delete(user)
-            registrationRepo.delete(registration)
+            userRepo.delete(savedUser)
             throw UserRegistrationException("Failed to send authorization code to emailName: ${userRegistrationDTO.email}.")
         }
     }
@@ -107,44 +107,21 @@ class UserRegistrationServiceImpl(
         }
     }
 
-    private fun User.setInitialPrimaryEmail() = User(
-            id = this.id,
-            enabled = this.enabled,
-            usernameU = this.usernameU,
-            passwordP = this.password,
-            credentialsNonExpired = true,
-            accountNonExpired = true,
-            accountNonLocked = true,
-            requiresTwoFactor = false,
-            userAuthorities = this.authorities,
-            userRefreshTokens = this.userRefreshTokens,
-            userEmails = this.userEmails,
-            ownedLists = this.ownedLists,
-            lists = this.lists,
-            registration = this.registration,
-            mainEmail = this.userEmails.first()
-    )
+    private fun User.addRegistrationAndEmail(registration: Registration, email: Email) =
+            this.run {
+                mainEmail = email
+                this.registration = registration
+                this.userEmails = mutableListOf(email)
+                this
+            }
 
-    private fun User.activateUser() = User(
-            id = this.id,
-            enabled = true,
-            usernameU = this.usernameU,
-            passwordP = this.password,
-            credentialsNonExpired = true,
-            accountNonExpired = true,
-            accountNonLocked = true,
-            requiresTwoFactor = false,
-            userAuthorities = this.authorities,
-            userRefreshTokens = this.userRefreshTokens,
-            userEmails = this.userEmails,
-            ownedLists = this.ownedLists,
-            lists = this.lists,
-            registration = this.registration,
-            mainEmail = this.mainEmail
-    )
+
+    private fun User.activateUser() = this.run {
+        this.enabled = true
+        this
+    }
 
     private fun UserRegistrationDTO.toUser() = User(
-            id = UUID.randomUUID().toString(),
             enabled = false,
             usernameU = this.userName.trim(),
             passwordP = bCryptPasswordEncoder.encode(this.password.trim() + this.userName.trim()),
@@ -161,61 +138,9 @@ class UserRegistrationServiceImpl(
             mainEmail = null
     )
 
-    private fun Registration.completeRegistration() = Registration(
-            id = this.id,
-            user = this.user,
-            registrationDate = this.registrationDate,
-            activationDate = Date(),
-            active = true
-    )
-
-    private fun UserRegistrationDTO.isUserOk() {
-        isValidEmailAddress(this.email)
-        isPasswordValid(this.password, this.passwordConfirmation)
-        isUsernameValid(this.userName)
-    }
-
-    fun isValidEmailAddress(email: String) {
-        if (isNullOrEmpty(email)) {
-            logger.error("User emailName null or empty")
-            throw UserRegistrationException("Email is null or empty.")
-        }
-        try {
-            val emailAddr = InternetAddress(email)
-            emailAddr.validate()
-        } catch (ex: AddressException) {
-            logger.error("User emailName format not valid")
-            throw UserRegistrationException("Email format is not valid.")
-        }
-    }
-
-    fun isPasswordValid(password: String, passwordConfirmation: String) {
-        if (isNullOrEmpty(password) || isNullOrEmpty(passwordConfirmation)) {
-            logger.error("User password is null or empty")
-            throw UserRegistrationException("Password field is empty or null.")
-        }
-        val pattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$"
-        if (!password.matches(pattern.toRegex()) && password == passwordConfirmation) {
-            logger.error("User password weak or does not match")
-            throw UserRegistrationException("Password is too weak or does not match.")
-        }
-
-    }
-
-    fun isNullOrEmpty(string: String?): Boolean {
-        return string == null || string.isEmpty()
-    }
-
-    fun isUsernameValid(username: String) {
-        if (isNullOrEmpty(username)) {
-            logger.error("User name empty or null")
-            throw UserRegistrationException("Username empty or null.")
-
-        }
-        if (!username.matches("[A-Za-z0-9_]+".toRegex())) {
-            logger.error("User name not valid")
-            throw UserRegistrationException("Username not valid.")
-
-        }
+    private fun Registration.completeRegistration() = this.run {
+        this.active = true
+        activationDate = Date()
+        this
     }
 }
