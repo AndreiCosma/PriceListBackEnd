@@ -7,7 +7,10 @@ spring:
     username: "postgres"
     password: "postgres"
   jpa:
-    hibernate.ddl-auto: 'update'
+    hibernate:
+      ddl-auto: 'create'
+      hbm2ddl:
+        auto: 'create'
     show-sql: true
   mail:
     host: smtp.gmail.com
