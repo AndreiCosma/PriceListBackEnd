@@ -3,6 +3,7 @@ package com.csm.config
 import com.csm.config.auth.AuthManager
 import com.csm.config.auth.SecurityContextRepository
 import com.csm.controller.RegisterController
+import com.csm.domain.entity.Authority
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -37,9 +38,8 @@ class SecurityConfig(
             .pathMatchers("/register").permitAll()
             .pathMatchers("/refresh").permitAll()
             .pathMatchers("/api/v1/odata/v4/NOTES").permitAll()
-            .pathMatchers("/api/v1/**").authenticated()
-            .pathMatchers(HttpMethod.POST,"/api/v1/**").authenticated()
-            .pathMatchers("/develop/client").permitAll()
+            .pathMatchers("/api/v1/**").hasAuthority(Authority.ROLE_USER)
+            .pathMatchers("/develop/**").hasAuthority(Authority.ROLE_DEVELOPER)
             .pathMatchers("/login", "/v2/api-docs", "/configuration/ui", "/swagger-resources/**", "/configuration/**", "/swagger-ui.html", "/webjars/**").permitAll()
             .and().build()
 
