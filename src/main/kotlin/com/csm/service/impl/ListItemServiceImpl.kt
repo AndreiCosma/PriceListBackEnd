@@ -33,7 +33,7 @@ class ListItemServiceImpl(
 
     }
 
-    override fun deleteItem(itemId: String, parentId: String, user: User) {
+    override fun deleteItem(itemId: String, user: User) {
         checkListItemRepo.deleteByIdAndUser(id = itemId, user = user)
     }
 
@@ -45,7 +45,7 @@ class ListItemServiceImpl(
     )
 
     fun CheckListItemDTO.toPersistable(parent: CheckList) = CheckListItem(
-            id = UUID.randomUUID().toString(),
+            id = this.id,
             name = this.name,
             checked = this.checked,
             checkList = parent

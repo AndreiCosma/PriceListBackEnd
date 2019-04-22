@@ -29,7 +29,7 @@ class UserLoginServiceImpl(
 
     @Transactional
     override fun loginUser(userLoginRequestDTO: UserLoginRequestDTO): TokenDTO {
-        clientService.checkClient(userLoginRequestDTO.clientUUID.trim(), userLoginRequestDTO.clientSecret.trim())
+        clientService.checkClient(userLoginRequestDTO.clientName.trim(), userLoginRequestDTO.clientSecret.trim())
 
         val userOptional = userRepo.findByUsernameU(userLoginRequestDTO.username.trim())
 
@@ -50,8 +50,6 @@ class UserLoginServiceImpl(
                 deviceUUID = userLoginRequestDTO.deviceUUID.trim())
 
         userOptional.get().userRefreshTokens.add(refreshToken)
-
-        userRepo.save(userOptional.get())
 
         return TokenDTO(accessToken = jwtUtil.generateToken(user = userOptional.get()), refreshToken = refreshToken.refreshToken)
     }

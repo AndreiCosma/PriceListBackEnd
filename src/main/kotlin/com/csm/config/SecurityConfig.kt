@@ -38,6 +38,7 @@ class SecurityConfig(
             .pathMatchers("/refresh").permitAll()
             .pathMatchers("/api/v1/odata/v4/NOTES").permitAll()
             .pathMatchers("/api/v1/**").authenticated()
+            .pathMatchers(HttpMethod.POST,"/api/v1/**").authenticated()
             .pathMatchers("/develop/client").permitAll()
             .pathMatchers("/login", "/v2/api-docs", "/configuration/ui", "/swagger-resources/**", "/configuration/**", "/swagger-ui.html", "/webjars/**").permitAll()
             .and().build()

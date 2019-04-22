@@ -13,13 +13,12 @@ import com.csm.service.def.AuthorityService
 import com.csm.service.def.ClientService
 import com.csm.service.def.UserRegistrationService
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.*
-import javax.mail.internet.AddressException
-import javax.mail.internet.InternetAddress
 import javax.transaction.Transactional
 import org.springframework.mail.MailException as MailException1
 
@@ -34,6 +33,9 @@ class UserRegistrationServiceImpl(
         val authorityService: AuthorityService
 ) : UserRegistrationService {
     private val logger = LoggerFactory.getLogger(this.javaClass)
+
+    @Value("\${destination.base}")
+    lateinit var appBaseDestination: String
 
     @Transactional
     override fun registerNewUser(userRegistrationDTO: UserRegistrationDTO) {
@@ -72,7 +74,7 @@ class UserRegistrationServiceImpl(
         //Send confirmation emailName.
         val simpleMailMessage = SimpleMailMessage()
         simpleMailMessage.setSubject("Price List account verification")
-        simpleMailMessage.setText("Account verification link: http://localhost:8080/register?code=${registration.id}\n " +
+        simpleMailMessage.setText("Account verification link: ${appBaseDestination}register?code=${registration.id}\n " +
                 "If you did not registered ignore this email, ignore this. \n Do not reply to this emailName.")
         simpleMailMessage.setTo(userRegistrationDTO.email)
         try {
@@ -96,10 +98,10 @@ class UserRegistrationServiceImpl(
         }
 
         try {
-            registrationRepo.save(registration.get().completeRegistration())
+            registration.get().completeRegistration()
             val user = registration.get().user
             user.userAuthorities.add(authorityService.getAuthority(authority = Authority.ROLE_USER))
-            userRepo.save(user.activateUser())
+            user.activateUser()
         } catch (e: Exception) {
             //ToDo: Investigate in case of error rollback
             logger.error("User registration exception --> $e")

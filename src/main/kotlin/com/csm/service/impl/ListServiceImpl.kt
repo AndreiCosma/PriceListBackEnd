@@ -6,9 +6,11 @@ import com.csm.domain.entity.CheckList
 import com.csm.domain.entity.CheckListItem
 import com.csm.domain.entity.User
 import com.csm.domain.repo.ListRepo
+import com.csm.domain.repo.UserRepo
 import com.csm.service.def.ListService
 import org.springframework.stereotype.Service
 import java.util.*
+import javax.transaction.Transactional
 
 
 /*
@@ -16,46 +18,50 @@ import java.util.*
 */
 @Service
 class ListServiceImpl(
-        val checkListRepo: ListRepo
+        val checkListRepo: ListRepo,
+        val userRepo: UserRepo
 ) : ListService {
 
+    @Transactional
     override fun createCheckList(user: User): CheckListDTO {
         //Create List
+        val userWithHibernateSessionActive = userRepo.findById(user.id).get()
         val checkList = CheckList(
                 id = UUID.randomUUID().toString(),
                 name = "New Check List",
                 items = mutableListOf(),
-                owner = user,
-                users = mutableListOf(user)
+                owner = userWithHibernateSessionActive,
+                users = mutableListOf(userWithHibernateSessionActive)
         )
-        user.ownedLists.add(checkList)
-        user.lists.add(checkList)
+        userWithHibernateSessionActive.apply { this.lists.add(checkList); this.ownedLists.add(checkList) }
+
         //Return list
-        return checkListRepo.save(checkList).toDTO()
+        return checkList.toDTO()
     }
 
+    @Transactional
     override fun saveRemoteCreatedCheckList(checkListDTO: CheckListDTO, user: User) {
-        val checkList = checkListDTO.toPersistable(user = user)
+        val userWithHibernateSessionActive = userRepo.findById(user.id)
+        val checkList = checkListDTO.toPersistable(user = userWithHibernateSessionActive.get())
         checkList.items.addAll(checkListDTO.items.toPersistable(checkList))
-        user.ownedLists.add(checkList)
-        user.lists.add(checkList)
-        checkListRepo.save(checkList)
+        userWithHibernateSessionActive.get().apply { this.lists.add(checkList); this.ownedLists.add(checkList) }
     }
 
+    @Transactional
     override fun getCheckList(id: String, user: User): CheckListDTO = checkListRepo.findByIdAndUser(id = id, user = user).toDTO()
 
+    @Transactional
     override fun getCheckLists(user: User): List<CheckListDTO> = checkListRepo.findByUser(user = user).toDTO()
 
+    @Transactional
     override fun updateCheckList(checkListDTO: CheckListDTO, user: User) {
         // Get list from database.
-        val checkList = checkListRepo.findByIdAndUser(id = checkListDTO.id, user = user)
+        checkListRepo.findByIdAndUser(id = checkListDTO.id, user = user)
 
         //ToDo: Update only fields that are not null in the DTO
-
-        //Save list
-        checkListRepo.save(checkList)
     }
 
+    @Transactional
     override fun deleteCheckList(id: String, user: User) = checkListRepo.deleteByIdAndUser(id = id, user = user)
 
     private fun CheckList.toDTO() = CheckListDTO(

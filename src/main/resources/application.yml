@@ -7,7 +7,7 @@ spring:
     username: "postgres"
     password: "postgres"
   jpa:
-    hibernate.ddl-auto: 'create-drop'
+    hibernate.ddl-auto: 'update'
     show-sql: true
   mail:
     host: smtp.gmail.com
@@ -28,3 +28,5 @@ spring:
     clean-disabled: false
     check-location: false
     baseline-on-migrate: true
+destination:
+  base: "https://checklistbackend.cfapps.eu10.hana.ondemand.com/"

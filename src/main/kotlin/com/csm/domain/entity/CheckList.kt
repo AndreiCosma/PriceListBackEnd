@@ -14,9 +14,9 @@ class CheckList(
         val name: String,
         @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "checkList")
         val items: MutableList<CheckListItem>,
-        @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.DETACH])
+        @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.DETACH, CascadeType.PERSIST])
         @JoinColumn(name = "owner_id")
         val owner: User,
-        @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.DETACH], mappedBy = "lists")
+        @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.DETACH, CascadeType.PERSIST], mappedBy = "lists")
         val users: MutableList<User>
 ) : BaseEntity(id)

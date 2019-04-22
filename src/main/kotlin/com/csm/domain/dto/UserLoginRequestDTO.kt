@@ -15,7 +15,7 @@ data class UserLoginRequestDTO(
         val password: String,
         @NotNull
         @NotBlank
-        val clientUUID: String,
+        val clientName: String,
         @NotNull
         @NotBlank
         val clientSecret: String,

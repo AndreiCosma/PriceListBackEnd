@@ -12,5 +12,5 @@ interface ListItemService {
     fun persistRemoteItem(checkListItemDTO: CheckListItemDTO, user: User)
     fun getItem(itemId: String, user: User): CheckListItemDTO
     fun updateItem(checkListItemDTO: CheckListItemDTO, user: User)
-    fun deleteItem(itemId: String, parentId: String, user: User)
+    fun deleteItem(itemId: String, user: User)
 }

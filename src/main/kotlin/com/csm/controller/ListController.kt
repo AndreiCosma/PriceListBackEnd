@@ -1,13 +1,16 @@
 package com.csm.controller
 
 import com.csm.domain.dto.CheckListDTO
+import com.csm.domain.entity.User
 import com.csm.service.def.AuthenticationService
 import com.csm.service.def.ListService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.http.HttpStatus
+import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.toMono
+import java.security.Principal
 
 
 /*
@@ -33,9 +36,9 @@ class ListController(
 
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Request the server to create a list froma provided copy.")
+    @ApiOperation(value = "Request the server to create a list from a provided copy.")
     @PostMapping
-    fun saveRemoteCreatedCheckList(@RequestBody checkListDTO: CheckListDTO) = checkListService.saveRemoteCreatedCheckList(checkListDTO = checkListDTO, user = authenticationService.getAuthenticatedUser())
+    fun saveRemoteCreatedCheckList(auth: Authentication, @RequestBody checkListDTO: CheckListDTO) = checkListService.saveRemoteCreatedCheckList(checkListDTO = checkListDTO, user = auth.principal as User)
 
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
@@ -44,10 +47,17 @@ class ListController(
     fun getCheckList(@PathVariable id: String) = checkListService.getCheckList(id = id, user = authenticationService.getAuthenticatedUser())
 
     @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Retrieve the lists for the authenticated user.")
+    @GetMapping(path = ["/all"])
+    fun getCheckLists() = checkListService.getCheckLists(user = authenticationService.getAuthenticatedUser())
+
+
+    @ResponseBody
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Update a certain list. The server updates all the fields that are not null. If a field is null it will ignore it.")
     @PutMapping
-    fun updateCheckList(@RequestBody checkListDTO: CheckListDTO) = checkListService.updateCheckList(checkListDTO = checkListDTO, user = authenticationService.getAuthenticatedUser())
+    fun updateCheckList(auth: Authentication, @RequestBody checkListDTO: CheckListDTO) = checkListService.updateCheckList(checkListDTO = checkListDTO, user = auth.principal as User)
 
     @ResponseBody
     @ResponseStatus(HttpStatus.NO_CONTENT)

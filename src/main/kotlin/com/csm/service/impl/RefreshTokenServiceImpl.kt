@@ -6,12 +6,14 @@ import com.csm.domain.repo.RefreshTokenRepo
 import com.csm.exception.token.RefreshTokenNotFoundException
 import com.csm.service.def.JWTUtilService
 import com.csm.service.def.RefreshTokenService
+import org.springframework.stereotype.Service
 import java.util.*
 
 
 /*
 * Created by I503342 - 20/03/2019
 */
+@Service
 class RefreshTokenServiceImpl(
         val jwtUtil: JWTUtilService,
         val refreshTokenRepo: RefreshTokenRepo

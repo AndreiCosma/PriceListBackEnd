@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiOperation
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.toMono
 
 
@@ -14,6 +15,7 @@ import reactor.core.publisher.toMono
 */
 
 @RequestMapping(path = [RefreshTokenController.PATH])
+@RestController
 @Api(tags = ["Refresh an access token here."])
 class RefreshTokenController(
         private val refreshTokenService: RefreshTokenService
