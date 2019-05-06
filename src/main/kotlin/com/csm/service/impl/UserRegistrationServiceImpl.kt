@@ -80,7 +80,6 @@ class UserRegistrationServiceImpl(
         try {
             javaMailSender.send(simpleMailMessage)
         } catch (e: MailException1) {
-            //ToDO: Investigate jpa error on delete if email send fails
             //Delete users if emailName fails.
             logger.error("Email error ---> $e")
             userRepo.delete(savedUser)

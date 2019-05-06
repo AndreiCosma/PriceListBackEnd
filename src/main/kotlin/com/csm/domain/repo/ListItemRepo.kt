@@ -1,6 +1,5 @@
 package com.csm.domain.repo
 
-import com.csm.domain.entity.CheckList
 import com.csm.domain.entity.CheckListItem
 import com.csm.domain.entity.User
 import org.springframework.data.jpa.repository.JpaRepository

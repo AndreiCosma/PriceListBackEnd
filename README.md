@@ -22,3 +22,9 @@
 + Get JWT. path = /login, method = post, requestBody = UserLoginRequestDTO, responseBody = TokenDTO
 + Use the JWT for further requests.
 + If the JWT expires, use the provided refresh token to get a new one. path = /refresh, method = post, requestParams = refreshToken
+
+## SAP Cloud Platform - Cloud Foundry Environment
+
+1. To add a new client as JVM arguments add the following variable to user provided variables section:
+ - key: JBP_CONFIG_JAVA_MAIN
+ - value: { arguments: 'e8c3e87d-00fb-428b-888e-dcd6f9b99729 d8bbe44d-9fab-4725-8f1e-ced5e551bd56' } 
