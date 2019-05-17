@@ -2,15 +2,13 @@ package com.csm.service.impl
 
 import com.csm.domain.entity.Authority
 import com.csm.domain.repo.AuthorityRepo
-import com.csm.exception.AuthorityNotFoundException
 import com.csm.service.def.AuthorityService
 import org.springframework.stereotype.Service
-import java.util.*
-
 
 /*
 * Created by I503342 - 17/04/2019
 */
+@Service
 class AuthorityServiceImpl(
         val authorityRepo: AuthorityRepo
 ) : AuthorityService {

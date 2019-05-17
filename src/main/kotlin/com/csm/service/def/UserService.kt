@@ -4,7 +4,6 @@ import com.csm.domain.entity.User
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 
-@Service
 interface UserService {
 
     fun findById(id: String): Mono<User>

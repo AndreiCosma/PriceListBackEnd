@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service
 * Created by I503342 - 16/04/2019
 */
 
+@Service
 class AuthenticationServiceImpl : AuthenticationService {
     override fun getAuthenticatedUser(): User = SecurityContextHolder.getContext().authentication.principal as User
 }

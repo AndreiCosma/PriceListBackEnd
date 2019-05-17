@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.util.*
 
+@Service
 class JWTUtilServiceImpl : JWTUtilService {
     private val logger = LoggerFactory.getLogger(this.javaClass)
 

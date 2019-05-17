@@ -8,9 +8,9 @@ spring:
     password: "postgres"
   jpa:
     hibernate:
-      ddl-auto: 'create'
+      ddl-auto: 'update'
       hbm2ddl:
-        auto: 'create'
+        auto: 'update'
     show-sql: true
   mail:
     host: smtp.gmail.com

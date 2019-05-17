@@ -17,6 +17,7 @@ import javax.transaction.Transactional
 * Created by I503342 - 21/03/2019
 */
 
+@Service
 class ListServiceImpl(
         val checkListRepo: ListRepo,
         val userRepo: UserRepo

@@ -9,7 +9,7 @@ import javax.transaction.Transactional
 /*
 * Created by I503342 - 19/03/2019
 */
-@Service
+
 interface UserLoginService {
 
     fun loginUser(userLoginRequestDTO: UserLoginRequestDTO): TokenDTO

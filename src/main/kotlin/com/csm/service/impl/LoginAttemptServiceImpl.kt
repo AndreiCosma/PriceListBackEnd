@@ -13,6 +13,7 @@ import java.util.concurrent.ExecutionException
 * Created by I503342 - 08/04/2019
 */
 
+@Service
 class LoginAttemptServiceImpl : LoginAttemptService {
 
     private val attemptsCache: LoadingCache<String, Int> = CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.DAYS).build(object : CacheLoader<String, Int>() {

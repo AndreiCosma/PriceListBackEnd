@@ -10,11 +10,14 @@ import com.csm.exception.list.ListNotFoundException
 import com.csm.service.def.ListItemService
 import org.springframework.stereotype.Service
 import java.util.*
+import javax.transaction.Transactional
 
 
 /*
 * Created by I503342 - 21/03/2019
 */
+
+@Service
 class ListItemServiceImpl(
         val checkListItemRepo: ListItemRepo,
         val checkListRepo: ListRepo
@@ -27,9 +30,9 @@ class ListItemServiceImpl(
 
     override fun getItem(itemId: String, user: User) = checkListItemRepo.findByIdAndUser(id = itemId, user = user).toDTO()
 
+    @Transactional
     override fun updateItem(checkListItemDTO: CheckListItemDTO, user: User) {
         (checkListItemRepo.findByIdAndUser(id = checkListItemDTO.id, user = user)).update(checkListItemDTO)
-
     }
 
     override fun deleteItem(itemId: String, user: User) {
@@ -51,8 +54,8 @@ class ListItemServiceImpl(
     )
 
     fun CheckListItem.update(dto: CheckListItemDTO) = this.run {
-        name = dto.name
-        checked = dto.checked
+        this.name = dto.name
+        this.checked = dto.checked
         this
     }
 }

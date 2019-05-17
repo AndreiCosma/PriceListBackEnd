@@ -17,7 +17,7 @@ class DeleteOldRefreshTokensTask(
 
     private val logger = LoggerFactory.getLogger(this.javaClass)
 
-    @Scheduled(fixedRate = DeleteOldNotActiveRegistrationsTask.HOUR)
+    @Scheduled(fixedRate = HOUR)
     fun deleteOldRefreshTokens() {
         try {
             val oldTokens = refreshTokenRepo.findOldTokens()

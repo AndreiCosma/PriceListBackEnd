@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 /*
 * Created by I503342 - 21/03/2019
 */
-@Service
+
 interface ListService {
     fun createCheckList(user: User): CheckListDTO
     fun persistRemoteCheckList(checkListDTO: CheckListDTO, user: User)
