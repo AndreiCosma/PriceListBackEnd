@@ -18,14 +18,11 @@ import java.util.*
 @RestController
 @RequestMapping(path = [DevelopController.PATH])
 @Api(tags = ["This controller contains development tools."])
-//@Profile(value = ["local"])
+@Profile(value = ["local"])
 class DevelopController(
         val bCryptPasswordEncoder: BCryptPasswordEncoder,
         val clientRepo: ClientRepo
 ) {
-    companion object {
-        const val PATH = "/develop"
-    }
 
     @GetMapping(path = ["/client"])
     @ApiOperation(value = "Use this to generate new client credentials for further requests.")
@@ -39,6 +36,10 @@ class DevelopController(
             clientName = this.clientUUID,
             clientSecret = notEncodedPassword
     )
+
+    companion object {
+        const val PATH = "/develop"
+    }
 }
 
 

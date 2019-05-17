@@ -15,7 +15,6 @@ import java.util.*
 /*
 * Created by I503342 - 21/03/2019
 */
-@Service
 class ListItemServiceImpl(
         val checkListItemRepo: ListItemRepo,
         val checkListRepo: ListRepo
@@ -54,7 +53,6 @@ class ListItemServiceImpl(
     fun CheckListItem.update(dto: CheckListItemDTO) = this.run {
         name = dto.name
         checked = dto.checked
-        checkList = this.checkList
         this
     }
 }

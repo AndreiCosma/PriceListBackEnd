@@ -18,7 +18,7 @@ import javax.transaction.Transactional
 /*
 * Created by I503342 - 19/03/2019
 */
-@Service
+
 class UserLoginServiceImpl(
         val jwtUtil: JWTUtilService,
         val clientService: ClientService,

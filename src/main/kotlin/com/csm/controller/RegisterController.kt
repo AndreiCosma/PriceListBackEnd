@@ -13,9 +13,6 @@ import org.springframework.web.bind.annotation.*
 class RegisterController(
         val userRegistrationService: UserRegistrationService
 ) {
-    companion object {
-        const val PATH = "/register"
-    }
 
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
@@ -32,4 +29,7 @@ class RegisterController(
     fun completeNewUserRegistration(@RequestParam code: String) =
             userRegistrationService.completeNewUserRegistration(code)
 
+    companion object {
+        const val PATH = "/register"
+    }
 }

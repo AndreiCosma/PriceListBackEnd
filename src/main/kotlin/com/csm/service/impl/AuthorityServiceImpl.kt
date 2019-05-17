@@ -11,7 +11,6 @@ import java.util.*
 /*
 * Created by I503342 - 17/04/2019
 */
-@Service
 class AuthorityServiceImpl(
         val authorityRepo: AuthorityRepo
 ) : AuthorityService {

@@ -14,7 +14,6 @@ import java.util.*
 * Created by I503342 - 21/03/2019
 */
 
-@Service
 class ClientServiceImpl(
         val bCryptPasswordEncoder: BCryptPasswordEncoder,
         val clientRepo: ClientRepo

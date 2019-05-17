@@ -16,7 +16,7 @@ import javax.transaction.Transactional
 /*
 * Created by I503342 - 21/03/2019
 */
-@Service
+
 class ListServiceImpl(
         val checkListRepo: ListRepo,
         val userRepo: UserRepo
@@ -40,7 +40,7 @@ class ListServiceImpl(
     }
 
     @Transactional
-    override fun saveRemoteCreatedCheckList(checkListDTO: CheckListDTO, user: User) {
+    override fun persistRemoteCheckList(checkListDTO: CheckListDTO, user: User) {
         val userWithHibernateSessionActive = userRepo.findById(user.id)
         val checkList = checkListDTO.toPersistable(user = userWithHibernateSessionActive.get())
         checkList.items.addAll(checkListDTO.items.toPersistable(checkList))
@@ -58,7 +58,7 @@ class ListServiceImpl(
         // Get list from database.
         checkListRepo.findByIdAndUser(id = checkListDTO.id, user = user)
 
-        //ToDo: Update only fields that are not null in the DTO
+        //zToDo: Update only fields that are not null in the DTO
     }
 
     @Transactional

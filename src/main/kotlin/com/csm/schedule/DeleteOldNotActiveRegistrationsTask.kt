@@ -16,12 +16,6 @@ class DeleteOldNotActiveRegistrationsTask(
         val registrationRepo: RegistrationRepo,
         val userRepo: UserRepo
 ) {
-    companion object {
-        //One hour in millis
-        const val HOUR = 60 * 60 * 1000L
-        //One day in millis
-        const val DAY = 24 * 60 * 60 * 1000L
-    }
 
     private val logger = LoggerFactory.getLogger(this.javaClass)
 
@@ -37,5 +31,12 @@ class DeleteOldNotActiveRegistrationsTask(
         } catch (e: Exception) {
             logger.error("Exception in ${this.javaClass.simpleName} --> $e")
         }
+    }
+
+    companion object {
+        //One hour in millis
+        const val HOUR = 60 * 60 * 1000L
+        //One day in millis
+        const val DAY = 24 * 60 * 60 * 1000L
     }
 }

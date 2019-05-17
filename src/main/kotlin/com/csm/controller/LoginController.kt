@@ -17,13 +17,14 @@ import reactor.core.publisher.toMono
 @RequestMapping(path = [LoginController.PATH])
 @Api(tags = ["Access, Refresh token endpoint used to get tokens."])
 class LoginController(val userLoginService: UserLoginService) {
-    companion object {
-        const val PATH = "/login"
-    }
 
     @PostMapping
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Use credentials to get access token and refresh token.")
     fun login(@RequestBody userLoginRequestDTO: UserLoginRequestDTO) = userLoginService.loginUser(userLoginRequestDTO).toMono()
+
+    companion object {
+        const val PATH = "/login"
+    }
 }

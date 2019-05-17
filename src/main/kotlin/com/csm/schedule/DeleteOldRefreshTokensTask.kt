@@ -14,12 +14,6 @@ import java.util.*
 class DeleteOldRefreshTokensTask(
         val refreshTokenRepo: RefreshTokenRepo
 ) {
-    companion object {
-        //One hour in millis
-        const val HOUR = 60 * 60 * 1000L
-        //One day in millis
-        const val DAY = 24 * 60 * 60 * 1000L
-    }
 
     private val logger = LoggerFactory.getLogger(this.javaClass)
 
@@ -31,5 +25,12 @@ class DeleteOldRefreshTokensTask(
         } catch (e: Exception) {
             logger.error("Exception in ${this.javaClass.simpleName} --> $e")
         }
+    }
+
+    companion object {
+        //One hour in millis
+        const val HOUR = 60 * 60 * 1000L
+        //One day in millis
+        const val DAY = 24 * 60 * 60 * 1000L
     }
 }

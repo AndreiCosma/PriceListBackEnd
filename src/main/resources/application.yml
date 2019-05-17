@@ -1,6 +1,6 @@
 spring:
   jwt:
-    secret: "ThisIsSecretForJWTHS512SignatureAlgorithmThatMUSTHave512bitsKeySize"
+    secret: "Q3Bo3xSt10IFVMf4kDo3WWM3yjdSwd0GmFIZYDv2u9Q0Ni22noIkFHPq63OR4nsuHR3owuY8MpaCwEx64derbRNEfJLlEzemvI4mWTDm7nFikHkdcUruiJYs"
     expiration: 3600000
   datasource:
     url: "jdbc:postgresql://localhost:5432/price-list"

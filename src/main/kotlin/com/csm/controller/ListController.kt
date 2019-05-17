@@ -12,7 +12,6 @@ import org.springframework.security.access.annotation.Secured
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.toMono
-import java.security.Principal
 
 
 /*
@@ -26,9 +25,6 @@ class ListController(
         val checkListService: ListService,
         val authenticationService: AuthenticationService
 ) {
-    companion object {
-        const val PATH = "/api/v1/list"
-    }
 
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
@@ -42,7 +38,7 @@ class ListController(
     @Secured(Authority.ROLE_USER)
     @ApiOperation(value = "Request the server to create a list from a provided copy.")
     @PostMapping
-    fun saveRemoteCreatedCheckList(auth: Authentication, @RequestBody checkListDTO: CheckListDTO) = checkListService.saveRemoteCreatedCheckList(checkListDTO = checkListDTO, user = auth.principal as User)
+    fun saveRemoteCreatedCheckList(auth: Authentication, @RequestBody checkListDTO: CheckListDTO) = checkListService.persistRemoteCheckList(checkListDTO = checkListDTO, user = auth.principal as User)
 
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
@@ -72,5 +68,9 @@ class ListController(
     @ApiOperation(value = "Delete a list by id and authenticated user.")
     @DeleteMapping(path = ["/l/{id}"])
     fun deleteCheckList(@PathVariable id: String) = checkListService.deleteCheckList(id = id, user = authenticationService.getAuthenticatedUser())
+
+    companion object {
+        const val PATH = "/api/v1/list"
+    }
 
 }

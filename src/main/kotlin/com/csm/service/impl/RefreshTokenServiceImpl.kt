@@ -13,7 +13,7 @@ import java.util.*
 /*
 * Created by I503342 - 20/03/2019
 */
-@Service
+
 class RefreshTokenServiceImpl(
         val jwtUtil: JWTUtilService,
         val refreshTokenRepo: RefreshTokenRepo

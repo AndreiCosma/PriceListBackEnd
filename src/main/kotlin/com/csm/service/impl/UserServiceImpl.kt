@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 import reactor.core.scheduler.Scheduler
 
-@Service
 class UserServiceImpl(
         private val userRepository: UserRepo,
         private val jdbcScheduler: Scheduler
@@ -19,4 +18,5 @@ class UserServiceImpl(
     override fun findById(id: String) = Mono.defer {
         Mono.justOrEmpty(userRepository.findById(id))
     }.subscribeOn(jdbcScheduler)
+
 }

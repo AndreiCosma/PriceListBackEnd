@@ -2,14 +2,16 @@ package com.csm.service.def
 
 import com.csm.domain.dto.CheckListDTO
 import com.csm.domain.entity.User
+import org.springframework.stereotype.Service
 
 
 /*
 * Created by I503342 - 21/03/2019
 */
+@Service
 interface ListService {
     fun createCheckList(user: User): CheckListDTO
-    fun saveRemoteCreatedCheckList(checkListDTO: CheckListDTO, user: User)
+    fun persistRemoteCheckList(checkListDTO: CheckListDTO, user: User)
     fun getCheckList(id: String, user: User): CheckListDTO
     fun getCheckLists(user: User): List<CheckListDTO>
     fun updateCheckList(checkListDTO: CheckListDTO, user: User)

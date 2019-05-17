@@ -22,7 +22,6 @@ import java.util.*
 import javax.transaction.Transactional
 import org.springframework.mail.MailException as MailException1
 
-@Service
 class UserRegistrationServiceImpl(
         val clientService: ClientService,
         val userRepo: UserRepo,

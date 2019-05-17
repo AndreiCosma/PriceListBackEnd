@@ -20,13 +20,13 @@ import reactor.core.publisher.toMono
 class RefreshTokenController(
         private val refreshTokenService: RefreshTokenService
 ) {
-    companion object {
-        const val PATH = "/refresh"
-    }
 
     @PostMapping
     @ApiOperation(value = "Refresh an access token using a refresh token.")
     fun refreshToken(@RequestParam(name = "refreshToken") refreshToken: String) =
             refreshTokenService.refreshToken(refreshToken).toMono()
 
+    companion object {
+        const val PATH = "/refresh"
+    }
 }

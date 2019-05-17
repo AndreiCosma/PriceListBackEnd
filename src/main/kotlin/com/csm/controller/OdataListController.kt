@@ -16,9 +16,6 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @Api(tags = ["Lists, oData v.4 end-point."])
 class OdataListController {
-    companion object {
-        const val PATH = "/api/v1/odata/v4/NOTES"
-    }
 
     @RequestMapping
     fun handle(httpRequest: HttpRequest, httpResponse: HttpResponse) {
@@ -29,4 +26,7 @@ class OdataListController {
         handler.processNettyRequest(httpRequest, httpResponse, mapOf())
     }
 
+    companion object {
+        const val PATH = "/api/v1/odata/v4/NOTES"
+    }
 }

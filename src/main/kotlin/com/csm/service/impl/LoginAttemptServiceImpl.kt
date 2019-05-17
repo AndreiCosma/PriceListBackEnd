@@ -13,11 +13,7 @@ import java.util.concurrent.ExecutionException
 * Created by I503342 - 08/04/2019
 */
 
-@Service
 class LoginAttemptServiceImpl : LoginAttemptService {
-    companion object {
-        const val MAX_ATTEMPT = 10
-    }
 
     private val attemptsCache: LoadingCache<String, Int> = CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.DAYS).build(object : CacheLoader<String, Int>() {
         override fun load(key: String): Int? {
@@ -46,5 +42,9 @@ class LoginAttemptServiceImpl : LoginAttemptService {
         attemptsCache.get(key) >= MAX_ATTEMPT
     } catch (e: ExecutionException) {
         false
+    }
+
+    companion object {
+        const val MAX_ATTEMPT = 10
     }
 }

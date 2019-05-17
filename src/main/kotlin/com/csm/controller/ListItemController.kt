@@ -24,9 +24,6 @@ class ListItemController(
         val listItemService: ListItemService,
         val authenticationService: AuthenticationService
 ) {
-    companion object {
-        const val PATH = "/api/v1/item"
-    }
 
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
@@ -62,4 +59,8 @@ class ListItemController(
     @ApiOperation(value = "Delete an item by id and authenticated user.")
     @DeleteMapping(path = ["/i/{itemId}"])
     fun deleteItem(@PathVariable itemId: String) = listItemService.deleteItem(itemId = itemId, user = authenticationService.getAuthenticatedUser())
+
+    companion object {
+        const val PATH = "/api/v1/item"
+    }
 }
