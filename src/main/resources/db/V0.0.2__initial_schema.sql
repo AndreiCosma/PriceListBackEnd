@@ -65,6 +65,7 @@ CREATE TABLE "check_list" (
 	"id" char(36) NOT NULL UNIQUE,
 	"app_user_id" char(36) NOT NULL,
 	"name" varchar(128) NOT NULL,
+    "creation_date" DATE NOT NULL,
 	CONSTRAINT check_list_pk PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE

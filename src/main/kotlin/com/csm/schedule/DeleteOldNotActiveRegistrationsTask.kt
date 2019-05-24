@@ -5,6 +5,9 @@ import com.csm.domain.repo.UserRepo
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import org.springframework.scheduling.annotation.Scheduled
+import java.time.Instant
+import java.time.temporal.ChronoUnit
+import java.util.*
 
 
 /*
@@ -21,16 +24,9 @@ class DeleteOldNotActiveRegistrationsTask(
 
     @Scheduled(fixedRate = HOUR)
     fun delteInactiveRegistration() {
-        try {
-            registrationRepo.findByActiveFalse().forEach {
-                if (it.registrationDate.time > System.currentTimeMillis() - HOUR) {
-                    userRepo.delete(it.user)
-                    registrationRepo.delete(it)
-                }
-            }
-        } catch (e: Exception) {
-            logger.error("Exception in ${this.javaClass.simpleName} --> $e")
-        }
+        registrationRepo.deleteExpiredActivation(Date.from(
+                Instant.now().minus(1L, ChronoUnit.HOURS)
+        ))
     }
 
     companion object {

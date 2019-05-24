@@ -1,5 +1,6 @@
 package com.csm.domain.entity
 
+import java.util.*
 import javax.persistence.*
 
 
@@ -11,12 +12,14 @@ import javax.persistence.*
 class CheckList(
         id: String,
         @Column(name = "name", length = 128)
-        val name: String,
+        var name: String,
         @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "checkList")
         val items: MutableList<CheckListItem>,
         @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.DETACH, CascadeType.PERSIST])
         @JoinColumn(name = "owner_id")
         val owner: User,
         @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.DETACH, CascadeType.PERSIST], mappedBy = "lists")
-        val users: MutableList<User>
+        val users: MutableList<User>,
+        @Column(name = "creation_date")
+        val creationDate: Date
 ) : BaseEntity(id)

@@ -19,7 +19,6 @@ interface ListItemRepo : JpaRepository<CheckListItem, String> {
     @Query("select r from CheckListItem r where :user MEMBER OF r.checkList.users")
     fun findByUser(@Param("user") user: User): List<CheckListItem>
 
-    //ToDo: This does not work. Fix it.
     @Transactional
     @Modifying
     @Query("delete from CheckListItem i where i.id  = ( select r.id from CheckListItem r where r.id = :id and :user MEMBER OF r.checkList.users )")

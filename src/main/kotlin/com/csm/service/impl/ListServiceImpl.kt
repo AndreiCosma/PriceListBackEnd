@@ -32,7 +32,8 @@ class ListServiceImpl(
                 name = "New Check List",
                 items = mutableListOf(),
                 owner = userWithHibernateSessionActive,
-                users = mutableListOf(userWithHibernateSessionActive)
+                users = mutableListOf(userWithHibernateSessionActive),
+                creationDate = Date()
         )
         userWithHibernateSessionActive.apply { this.lists.add(checkList); this.ownedLists.add(checkList) }
 
@@ -57,7 +58,8 @@ class ListServiceImpl(
     @Transactional
     override fun updateCheckList(checkListDTO: CheckListDTO, user: User) {
         // Get list from database.
-        checkListRepo.findByIdAndUser(id = checkListDTO.id, user = user)
+        checkListRepo.findByIdAndUser(id = checkListDTO.id, user = user).name = checkListDTO.name
+
 
         //zToDo: Update only fields that are not null in the DTO
     }
@@ -68,7 +70,8 @@ class ListServiceImpl(
     private fun CheckList.toDTO() = CheckListDTO(
             id = this.id,
             name = this.name,
-            items = this.items.toDTO(this.id)
+            items = this.items.toDTO(this.id),
+            creationDate = this.creationDate
     )
 
     private fun MutableList<CheckListItem>.toDTO(parentId: String): MutableList<CheckListItemDTO> = this.map { element -> element.toDTO(parentId) }.toMutableList()
@@ -87,7 +90,8 @@ class ListServiceImpl(
             name = this.name,
             items = mutableListOf(),
             owner = user,
-            users = mutableListOf(user)
+            users = mutableListOf(user),
+            creationDate =  this.creationDate
     )
 
     private fun MutableList<CheckListItemDTO>.toPersistable(parent: CheckList) = this.map { item -> item.toPersistable(parent) }.toMutableList()

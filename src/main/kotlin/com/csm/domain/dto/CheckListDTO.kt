@@ -1,5 +1,6 @@
 package com.csm.domain.dto
 
+import java.util.*
 import javax.validation.constraints.NotNull
 
 
@@ -11,5 +12,6 @@ class CheckListDTO(
         val id: String,
         @NotNull
         val name: String,
-        val items: MutableList<CheckListItemDTO>
+        val items: MutableList<CheckListItemDTO>,
+        val creationDate: Date
 )
