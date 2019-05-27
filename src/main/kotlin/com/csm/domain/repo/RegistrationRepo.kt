@@ -14,7 +14,7 @@ import java.util.stream.Stream
 interface RegistrationRepo : JpaRepository<Registration, String> {
 
     @Modifying
-    @Query("DELETE  r FROM Registration r where r.active = false and r.registrationDate < :timestamp")
+    @Query("DELETE FROM Registration r where r.active = false and r.registrationDate < :timestamp")
     fun deleteExpiredActivation(@Param("timestamp") timestamp: Date): Stream<Registration>
 
 }
