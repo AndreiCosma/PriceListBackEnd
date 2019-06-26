@@ -21,5 +21,10 @@ class CheckList(
         @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.DETACH, CascadeType.PERSIST], mappedBy = "lists")
         val users: MutableList<User>,
         @Column(name = "creation_date")
-        val creationDate: Date
+        val creationDate: Date,
+        @Column(name = "edit_date")
+        var editDate: Date,
+        @GeneratedValue
+        @Column(name = "position")
+        var position: Int = 1
 ) : BaseEntity(id)

@@ -22,7 +22,13 @@ class ListItemServiceImpl(
         val checkListItemRepo: ListItemRepo,
         val checkListRepo: ListRepo
 ) : ListItemService {
-    override fun requestNewItemForParentList(parentId: String, user: User) = checkListItemRepo.save(CheckListItem(id = UUID.randomUUID().toString(), name = "New Item", checked = false, checkList = checkListRepo.findByIdAndUser(id = parentId, user = user))).toDTO()
+    override fun requestNewItemForParentList(parentId: String, user: User) =
+            checkListItemRepo.save(CheckListItem(
+                    id = UUID.randomUUID().toString(),
+                    name = "New Item",
+                    checked = false,
+                    checkList = checkListRepo.findByIdAndUser(id = parentId, user = user),
+                    editDate = Date())).toDTO()
 
     override fun persistRemoteItem(checkListItemDTO: CheckListItemDTO, user: User) {
         checkListItemRepo.save(checkListItemDTO.toPersistable(checkListRepo.findByIdAndUser(id = checkListItemDTO.listId, user = user)))
@@ -43,19 +49,25 @@ class ListItemServiceImpl(
             listId = this.checkList.id,
             id = this.id,
             name = this.name,
-            checked = this.checked
+            checked = this.checked,
+            position = this.position,
+            editDate = this.editDate
     )
 
     fun CheckListItemDTO.toPersistable(parent: CheckList) = CheckListItem(
             id = this.id,
             name = this.name,
             checked = this.checked,
-            checkList = parent
+            checkList = parent,
+            position = this.position,
+            editDate = this.editDate
     )
 
     fun CheckListItem.update(dto: CheckListItemDTO) = this.run {
         this.name = dto.name
         this.checked = dto.checked
+        this.editDate = dto.editDate
+        this.position = dto.position
         this
     }
 }

@@ -1,5 +1,7 @@
 package com.csm.domain.dto
 
+import java.util.*
+import javax.persistence.Column
 import javax.validation.constraints.NotNull
 
 
@@ -14,5 +16,9 @@ class CheckListItemDTO(
         @NotNull
         val name: String,
         @NotNull
-        val checked: Boolean
+        val checked: Boolean,
+        @NotNull
+        val editDate: Date,
+        @NotNull
+        val position: Int
 )

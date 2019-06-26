@@ -1,5 +1,6 @@
 package com.csm.domain.entity
 
+import java.util.*
 import javax.persistence.*
 
 
@@ -16,5 +17,10 @@ class CheckListItem(
         var checked: Boolean,
         @ManyToOne(cascade = [CascadeType.DETACH])
         @JoinColumn(name = "check_list_id")
-        var checkList: CheckList
+        var checkList: CheckList,
+        @Column(name = "edit_date")
+        var editDate: Date,
+        @Column(name = "position")
+        @GeneratedValue
+        var position: Int = 1
 ) : BaseEntity(id)

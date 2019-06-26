@@ -33,9 +33,12 @@ class ListServiceImpl(
                 items = mutableListOf(),
                 owner = userWithHibernateSessionActive,
                 users = mutableListOf(userWithHibernateSessionActive),
-                creationDate = Date()
+                creationDate = Date(),
+                editDate = Date()
         )
         userWithHibernateSessionActive.apply { this.lists.add(checkList); this.ownedLists.add(checkList) }
+
+        userRepo.flush()
 
         //Return list
         return checkList.toDTO()
@@ -71,7 +74,10 @@ class ListServiceImpl(
             id = this.id,
             name = this.name,
             items = this.items.toDTO(this.id),
-            creationDate = this.creationDate
+            creationDate = this.creationDate,
+            editDate = this.editDate,
+            position = this.position
+
     )
 
     private fun MutableList<CheckListItem>.toDTO(parentId: String): MutableList<CheckListItemDTO> = this.map { element -> element.toDTO(parentId) }.toMutableList()
@@ -80,7 +86,9 @@ class ListServiceImpl(
             listId = parentId,
             id = this.id,
             name = this.name,
-            checked = this.checked
+            checked = this.checked,
+            editDate = this.editDate,
+            position = this.position
     )
 
     private fun List<CheckList>.toDTO() = this.map { element -> element.toDTO() }
@@ -91,7 +99,9 @@ class ListServiceImpl(
             items = mutableListOf(),
             owner = user,
             users = mutableListOf(user),
-            creationDate =  this.creationDate
+            creationDate = this.creationDate,
+            editDate = this.editDate,
+            position = this.position
     )
 
     private fun MutableList<CheckListItemDTO>.toPersistable(parent: CheckList) = this.map { item -> item.toPersistable(parent) }.toMutableList()
@@ -100,6 +110,8 @@ class ListServiceImpl(
             id = UUID.randomUUID().toString(),
             name = this.name,
             checked = this.checked,
-            checkList = parent
+            checkList = parent,
+            editDate = this.editDate,
+            position = this.position
     )
 }

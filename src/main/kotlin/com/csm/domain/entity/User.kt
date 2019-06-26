@@ -32,7 +32,7 @@ class User(
         @ManyToMany(cascade = [CascadeType.DETACH, CascadeType.PERSIST], fetch = FetchType.LAZY)
         @JoinTable(
                 name = "check_list_link_app_user",
-                joinColumns = [JoinColumn(name = "app_user_id")],
+                joinColumns = [JoinColumn(name = "owner_id")],
                 inverseJoinColumns = [JoinColumn(name = "check_list_id")]
         )
         var lists: MutableList<CheckList>,

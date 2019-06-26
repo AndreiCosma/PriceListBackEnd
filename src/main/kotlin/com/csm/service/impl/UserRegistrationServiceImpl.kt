@@ -101,6 +101,7 @@ class UserRegistrationServiceImpl(
             val user = registration.get().user
             user.userAuthorities.add(authorityService.getAuthority(authority = Authority.ROLE_USER))
             user.activateUser()
+            registrationRepo.flush()
         } catch (e: Exception) {
             //ToDo: Investigate in case of error rollback
             logger.error("User registration exception --> $e")

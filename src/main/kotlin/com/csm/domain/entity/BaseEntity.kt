@@ -13,6 +13,6 @@ open class BaseEntity(
         val id: String
 ) {
     constructor() : this(
-            id = UUID.randomUUID()!!.toString()
+            id = UUID.randomUUID().toString()
     )
 }
