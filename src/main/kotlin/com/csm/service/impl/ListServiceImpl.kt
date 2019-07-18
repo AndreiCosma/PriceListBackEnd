@@ -61,7 +61,13 @@ class ListServiceImpl(
     @Transactional
     override fun updateCheckList(checkListDTO: CheckListDTO, user: User) {
         // Get list from database.
-        checkListRepo.findByIdAndUser(id = checkListDTO.id, user = user).name = checkListDTO.name
+        checkListRepo.findByIdAndUser(id = checkListDTO.id, user = user).run {
+            this.name = checkListDTO.name
+            this.position = checkListDTO.position
+            this.editDate = checkListDTO.editDate
+        }
+
+        checkListRepo.flush()
 
 
         //zToDo: Update only fields that are not null in the DTO

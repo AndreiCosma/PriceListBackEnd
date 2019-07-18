@@ -1,7 +1,6 @@
 package com.csm.domain.dto
 
 import java.util.*
-import javax.persistence.Column
 import javax.validation.constraints.NotNull
 
 
